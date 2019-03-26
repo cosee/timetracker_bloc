@@ -19,7 +19,7 @@ class _EditPageState extends State<EditPage> {
   int selectedIndex = 0;
   bool _dbLoaded = false;
   WorkDay dayCache;
-  WorkPeriod period =WorkPeriod.dummyList();
+  WorkPeriod period = WorkPeriod.dummyList();
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,10 @@ class _EditPageState extends State<EditPage> {
         body: Column(
           children: <Widget>[
             _createTableHead(),
-            _buildTimesList(),
+            Flexible(
+              flex: 5,
+              child: _buildTimesList(),
+            ),
           ],
         ),
       ),
