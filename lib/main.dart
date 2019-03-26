@@ -9,6 +9,7 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({this.title});
   final String title;
+  String buttonText = 'Button!';
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +21,9 @@ class MyApp extends StatelessWidget {
         ),
         body: Center(
           child: RaisedButton(
-            child: Text('Button!'),
+            child: Text(buttonText),
             onPressed: () {
-              print('yay');
+              buttonText = 'No Button at all!';
             },
           ),
         ),
