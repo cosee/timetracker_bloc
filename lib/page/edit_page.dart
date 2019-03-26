@@ -4,6 +4,7 @@ import 'package:time_track/page/drawer/main_drawer.dart';
 import 'package:time_track/widgets/edit_row.dart';
 import 'package:time_track/model/work_day.dart';
 import 'package:time_track/model/work_period.dart';
+import 'package:time_track/db/entities/work_day_db.dart';
 
 class EditPage extends StatefulWidget {
   EditPage({this.title = 'Edit Page'});
@@ -22,6 +23,39 @@ class _EditPageState extends State<EditPage> {
   WorkPeriod period = WorkPeriod.dummyList();
 
   @override
+  void initState() {
+    print('selected index: $selectedIndex');
+    _initDayCache();
+    _loadDates();
+    super.initState();
+  }
+
+  void _loadDates() {
+    WorkDayDb().getAll().then((workDays) {
+      setState(() {
+        if (workDays.isNotEmpty) {
+          period = WorkPeriod(
+              periodBegin: DateTime.now(),
+              periodEnd: DateTime.now().add(Duration(days: 30)),
+              workDays: workDays);
+        } else {
+          period = WorkPeriod(
+              periodBegin: DateTime.now(),
+              periodEnd: DateTime.now().add(Duration(days: 30)));
+        }
+        _initDayCache();
+        _dbLoaded = true;
+      });
+    });
+  }
+
+  void _initDayCache() {
+    if (period?.workDays?.isNotEmpty == true) {
+      dayCache = period.workDays[selectedIndex].clone();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(accentColor: Colors.blue),
@@ -30,15 +64,17 @@ class _EditPageState extends State<EditPage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: Column(
-          children: <Widget>[
-            _createTableHead(),
-            Flexible(
-              flex: 5,
-              child: _buildTimesList(),
-            ),
-          ],
-        ),
+        body: _dbLoaded
+            ? Column(
+                children: <Widget>[
+                  _createTableHead(),
+                  Flexible(
+                    flex: 5,
+                    child: _buildTimesList(),
+                  ),
+                ],
+              )
+            : Center(child: Text('No times stored yet!')),
       ),
     );
   }
