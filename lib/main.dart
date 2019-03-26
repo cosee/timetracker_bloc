@@ -6,9 +6,18 @@ void main() {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({this.title});
   final String title;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _MyAppState();
+  }
+
+}
+
+class _MyAppState extends State<MyApp> {
   String buttonText = 'Button!';
 
   @override
@@ -17,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(accentColor: Colors.blue),
       home: Scaffold(
         appBar: AppBar(
-          title: Text(title),
+          title: Text(widget.title),
         ),
         body: Center(
           child: RaisedButton(
