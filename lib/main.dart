@@ -9,6 +9,7 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({this.title});
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,7 +19,9 @@ class MyApp extends StatelessWidget {
           title: Text(title),
         ),
         body: Center(
-          child: Text(title),
+          child: RaisedButton(
+            child: Text('Button!'),
+          ),
         ),
       ),
     );
