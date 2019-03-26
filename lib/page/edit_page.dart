@@ -24,6 +24,14 @@ class _EditPageState extends State<EditPage> {
               AppBar(
                 title: Text('Drawer'),
                 automaticallyImplyLeading: false,
+              ),
+              ListTile(
+                title: Text('Edit work times'),
+                onTap: () => Navigator.pushReplacementNamed(context, '/'),
+              ),
+              ListTile(
+                title: Text('Stored work times'),
+                onTap: () => Navigator.pushReplacementNamed(context, '/stored'),
               )
             ],
           ),
