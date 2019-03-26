@@ -17,31 +17,35 @@ class EditRow extends StatelessWidget {
   final bool isSelected;
 
   @override
-  Widget build(BuildContext context) => FlatButton(
-        onPressed: () => selectDay(index),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Container(
-              width: 50,
-              child: Text(weekDayFormatter.format(workEntry.date)),
-            ),
-            Container(
-              width: 80,
-              child: Text(dateFormatter.format(workEntry.date)),
-            ),
-            Container(
-              width: 50,
-              child:
-                  Text(workEntry.isEnabled() ? workEntry.timeAsString() : '-'),
-            ),
-            Container(
-              width: 80,
-              child: Text(workEntry.isEnabled()
-                  ? workEntry.hoursWorked.toString()
-                  : '-'),
-            )
-          ],
+  Widget build(BuildContext context) => Container(
+        margin: EdgeInsets.only(top: 4),
+        height: 25,
+        child: FlatButton(
+          onPressed: () => selectDay(index),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Container(
+                width: 50,
+                child: Text(weekDayFormatter.format(workEntry.date)),
+              ),
+              Container(
+                width: 80,
+                child: Text(dateFormatter.format(workEntry.date)),
+              ),
+              Container(
+                width: 50,
+                child: Text(
+                    workEntry.isEnabled() ? workEntry.timeAsString() : '-'),
+              ),
+              Container(
+                width: 80,
+                child: Text(workEntry.isEnabled()
+                    ? workEntry.hoursWorked.toString()
+                    : '-'),
+              )
+            ],
+          ),
         ),
       );
 }
