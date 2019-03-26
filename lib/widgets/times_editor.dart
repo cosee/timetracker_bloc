@@ -57,11 +57,9 @@ class _TimesEditorState extends State<TimesEditor> {
   }
 
   _resetState() {
-    String text = null;
-    if (widget.work.isEnabled()) {
-      text = widget.work.hoursWorked.toString();
-    }
-    controller = TextEditingController(text: text);
+    controller = TextEditingController(
+      text: widget.work.isEnabled() ? widget.work.hoursWorked.toString() : null,
+    );
     dayCache = widget.work.clone();
   }
 
