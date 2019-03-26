@@ -19,7 +19,7 @@ class _EditPageState extends State<EditPage> {
   int selectedIndex = 0;
   bool _dbLoaded = false;
   WorkDay dayCache;
-  WorkPeriod period;
+  WorkPeriod period =WorkPeriod.dummyList();
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +33,7 @@ class _EditPageState extends State<EditPage> {
         body: Column(
           children: <Widget>[
             _createTableHead(),
-            EditRow(),
-            EditRow(),
+            _buildTimesList(),
           ],
         ),
       ),
@@ -64,5 +63,26 @@ class _EditPageState extends State<EditPage> {
             ),
           ],
         ),
+      );
+
+  Widget _buildTimesList() {
+    Widget timesList = Center(
+      child: Text("No Times persisted yet"),
+    );
+    print('building list!');
+    if (period.workDays.length > 0) {
+      timesList = ListView.builder(
+        itemBuilder: _buildProductItem,
+        itemCount: period.workDays.length,
+      );
+    }
+
+    return timesList;
+  }
+
+  Widget _buildProductItem(BuildContext context, int index) => EditRow(
+        workEntry: period.workDays[index],
+        index: index,
+        isSelected: selectedIndex == index,
       );
 }
