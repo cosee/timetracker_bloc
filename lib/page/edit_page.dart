@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EditPage extends StatefulWidget {
-  EditPage({this.title});
+  EditPage({this.title = 'Edit Page'});
   final String title;
 
   @override
@@ -18,6 +18,16 @@ class _EditPageState extends State<EditPage> {
     return MaterialApp(
       theme: ThemeData(accentColor: Colors.blue),
       home: Scaffold(
+        drawer: Drawer(
+          child: Column(
+            children: <Widget>[
+              AppBar(
+                title: Text('Drawer'),
+                automaticallyImplyLeading: false,
+              )
+            ],
+          ),
+        ),
         appBar: AppBar(
           title: Text(widget.title),
         ),
