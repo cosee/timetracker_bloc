@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:time_track/page/drawer/main_drawer.dart';
 
 class StoredPage extends StatefulWidget {
-  StoredPage({this.title});
-  final String title;
-
   @override
   State<StatefulWidget> createState() {
     return _StoredPageState();
@@ -20,9 +17,9 @@ class _StoredPageState extends State<StoredPage> {
     return MaterialApp(
       theme: ThemeData(accentColor: Colors.blue),
       home: Scaffold(
-        drawer: MainDrawer(context),
+        drawer: MainDrawer(context, StoredPage),
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text('Useless page rigth now'),
         ),
         body: Center(
           child: Text('Another text'),

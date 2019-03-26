@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:time_track/page/edit_page.dart';
+import 'package:time_track/page/stored_page.dart';
+
+Map<Type, String> staticRoutes = {
+  EditPage: '/',
+  StoredPage: '/stored',
+};
+
 class MainDrawer extends Drawer {
-  MainDrawer(BuildContext context)
+  MainDrawer(BuildContext context, Type page)
       : super(
           child: Drawer(
             child: Column(
@@ -12,12 +20,15 @@ class MainDrawer extends Drawer {
                 ),
                 ListTile(
                   title: Text('Edit work times'),
-                  onTap: () => Navigator.pushReplacementNamed(context, '/'),
+                  enabled: page == EditPage,
+                  onTap: () => Navigator.pushReplacementNamed(
+                      context, staticRoutes[EditPage]),
                 ),
                 ListTile(
+                  enabled: page == StoredPage,
                   title: Text('Stored work times'),
-                  onTap: () =>
-                      Navigator.pushReplacementNamed(context, '/stored'),
+                  onTap: () => Navigator.pushReplacementNamed(
+                      context, staticRoutes[StoredPage]),
                 )
               ],
             ),

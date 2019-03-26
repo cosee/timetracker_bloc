@@ -11,9 +11,6 @@ import 'package:time_track/db/entities/work_day_db.dart';
 import 'package:time_track/util/compare.dart';
 
 class EditPage extends StatefulWidget {
-  EditPage({this.title = 'Edit Page'});
-  final String title;
-
   @override
   State<StatefulWidget> createState() {
     return _EditPageState();
@@ -58,8 +55,8 @@ class _EditPageState extends State<EditPage> {
     return MaterialApp(
         theme: ThemeData(accentColor: Colors.blue),
         home: Scaffold(
-          drawer: MainDrawer(context),
-          appBar: AppBar(title: Text(widget.title)),
+          drawer: MainDrawer(context, EditPage),
+          appBar: AppBar(title: Text('Edit Work Times')),
           body: _dbLoaded
               ? _createTable()
               : CenteredLoadingSpinner(text: 'Loading stored times...'),
