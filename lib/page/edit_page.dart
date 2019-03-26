@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:time_track/page/drawer/main_drawer.dart';
+import 'package:time_track/widgets/edit_row.dart';
 
 class EditPage extends StatefulWidget {
   EditPage({this.title = 'Edit Page'});
@@ -25,15 +26,7 @@ class _EditPageState extends State<EditPage> {
           title: Text(widget.title),
         ),
         body: Center(
-          child: RaisedButton(
-            child: Text(buttonText),
-            onPressed: () {
-              // buttonText = 'No Button at all!';
-              setState(() {
-                buttonText = 'No Button at all!';
-              });
-            },
-          ),
+          child: EditRow()
         ),
       ),
     );
