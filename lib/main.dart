@@ -14,7 +14,6 @@ class MyApp extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _MyAppState();
   }
-
 }
 
 class _MyAppState extends State<MyApp> {
@@ -32,7 +31,10 @@ class _MyAppState extends State<MyApp> {
           child: RaisedButton(
             child: Text(buttonText),
             onPressed: () {
-              buttonText = 'No Button at all!';
+              setState(() {
+                //ATOMIC OPERATION -> will store state even if app is already moving to background
+                buttonText = 'No Button at all!';
+              });
             },
           ),
         ),
