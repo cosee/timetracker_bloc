@@ -8,6 +8,7 @@ class TimesEditor extends StatelessWidget {
   TimesEditor(
       {this.work,
       this.index,
+      this.clearButtonEnabled,
       this.cacheDateTime,
       this.cacheDayTime,
       this.cacheHours,
@@ -16,6 +17,7 @@ class TimesEditor extends StatelessWidget {
 
   WorkDay work;
   int index;
+  bool clearButtonEnabled;
   Function(WorkDay) cacheDateTime;
   Function(int, int) cacheDayTime;
   Function(String) cacheHours;
@@ -116,6 +118,6 @@ class TimesEditor extends StatelessWidget {
   Widget _createClearButton() => RaisedButton(
         color: Colors.red,
         child: Text('Clear Entry'),
-        onPressed: (work?.isEnabled() == true) ? () => clearEntry(index) : null,
+        onPressed: clearButtonEnabled ? () => clearEntry(index) : null,
       );
 }

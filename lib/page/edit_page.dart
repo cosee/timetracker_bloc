@@ -21,6 +21,7 @@ class _EditPageState extends State<EditPage> {
   int selectedIndex = 0;
   bool _dbLoaded = false;
   WorkDay dayCache;
+  WorkDay _getSelected() => period.workDays[selectedIndex];
   WorkPeriod period = WorkPeriod.dummyList();
 
   @override
@@ -52,7 +53,7 @@ class _EditPageState extends State<EditPage> {
 
   void _initDayCache() {
     if (period?.workDays?.isNotEmpty == true) {
-      dayCache = period.workDays[selectedIndex].clone();
+      dayCache =_getSelected().clone();
     }
   }
 
@@ -133,6 +134,7 @@ class _EditPageState extends State<EditPage> {
     return TimesEditor(
       work: dayCache,
       index: selectedIndex,
+      clearButtonEnabled: _getSelected().isEnabled(),
       cacheHours: _cacheHours,
       cacheDayTime: _cacheDayTime,
       cacheDateTime: _cacheDateTime,
@@ -172,6 +174,7 @@ class _EditPageState extends State<EditPage> {
       WorkDayDb().insert(period.workDays[idx]).then((onValue) {
         print('db reponse $onValue');
       });
+      
     });
   }
 

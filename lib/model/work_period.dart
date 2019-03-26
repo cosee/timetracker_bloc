@@ -49,9 +49,7 @@ class WorkPeriod {
       pivot = pivot.add(Duration(days: 1));
     }
 
-    // workDays.sort((it, other) {
-    //   return it.date.isBefore(other.date) ? 1 : 0;
-    // });
+    workDays.sort((it, other) => it.date.isBefore(other.date) ? 0 : 1);
   }
 
   final DateTime periodBegin;
