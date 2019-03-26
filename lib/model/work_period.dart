@@ -1,7 +1,8 @@
+import 'dart:math';
+
 import 'package:time_track/model/work_day.dart';
 import 'package:time_track/util/clone.dart';
-
-import 'dart:math';
+import 'package:time_track/util/compare.dart';
 
 class WorkPeriod {
   WorkPeriod(
@@ -25,11 +26,6 @@ class WorkPeriod {
     }
   }
 
-  _isSameDate(DateTime date, DateTime other) =>
-      date.year == other.year &&
-      date.month == other.month &&
-      date.day == other.day;
-
   _generateMissingWorkDays(int numberOfDays) {
     var pivot = cloneDT(periodBegin);
     for (var i = 0; i < numberOfDays; i++) {
@@ -37,7 +33,7 @@ class WorkPeriod {
 
       if (workDays.isNotEmpty) {
         day = workDays.firstWhere(
-          (test) => _isSameDate(test.date, pivot),
+          (test) => isSameDate(test.date, pivot),
           orElse: () => null,
         );
       }

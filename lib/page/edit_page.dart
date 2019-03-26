@@ -8,6 +8,7 @@ import 'package:time_track/model/work_period.dart';
 import 'package:time_track/widgets/times_editor.dart';
 import 'package:time_track/widgets/centered_loading_spinner.dart';
 import 'package:time_track/db/entities/work_day_db.dart';
+import 'package:time_track/util/compare.dart';
 
 class EditPage extends StatefulWidget {
   EditPage({this.title = 'Edit Page'});
@@ -158,11 +159,8 @@ class _EditPageState extends State<EditPage> {
 
   //Finds indext of date
   void _saveChanges(WorkDay day) => setState(() {
-        int index = period.workDays.indexWhere((item) {
-          return item.date.year == day.date.year &&
-              item.date.month == day.date.month &&
-              item.date.day == day.date.day;
-        });
+        int index = period.workDays
+            .indexWhere((item) => isSameDate(item.date, day.date));
 
         period.workDays[index] = day.clone();
 
