@@ -5,7 +5,6 @@ import 'package:time_track/widgets/edit_row.dart';
 import 'package:time_track/model/work_day.dart';
 import 'package:time_track/model/work_period.dart';
 
-
 class EditPage extends StatefulWidget {
   EditPage({this.title = 'Edit Page'});
   final String title;
@@ -17,7 +16,8 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-    int selectedIndex = 0;
+  int selectedIndex = 0;
+  bool _dbLoaded = false;
   WorkDay dayCache;
   WorkPeriod period;
 
@@ -30,8 +30,11 @@ class _EditPageState extends State<EditPage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: Center(
-          child: EditRow()
+        body: Column(
+          children: <Widget>[
+            EditRow(),
+            EditRow()
+          ],
         ),
       ),
     );
