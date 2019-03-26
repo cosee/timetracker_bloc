@@ -16,8 +16,18 @@ class EditRow extends StatelessWidget {
   final Function(int) selectDay;
   final bool isSelected;
 
+  Color _getRowColor(BuildContext context) {
+    var theme = Theme.of(context);
+
+    var color = (workEntry.date.weekday < 6)
+        ? theme.buttonColor
+        : theme.accentColor.withOpacity(0.8);
+    return isSelected ? Colors.pinkAccent : color;
+  }
+
   @override
   Widget build(BuildContext context) => Container(
+        color: _getRowColor(context),
         margin: EdgeInsets.only(top: 4),
         height: 25,
         child: FlatButton(
