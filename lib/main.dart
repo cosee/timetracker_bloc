@@ -21,6 +21,9 @@ class MyApp extends StatelessWidget {
         body: Center(
           child: RaisedButton(
             child: Text('Button!'),
+            onPressed: () {
+              print('yay');
+            },
           ),
         ),
       ),
