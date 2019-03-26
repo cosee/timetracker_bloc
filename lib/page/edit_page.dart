@@ -86,6 +86,13 @@ class _EditPageState extends State<EditPage> {
   Widget _buildProductItem(BuildContext context, int index) => EditRow(
         workEntry: period.workDays[index],
         index: index,
+        selectDay: _selectDay,
         isSelected: selectedIndex == index,
       );
+
+  void _selectDay(int index) => setState(() {
+        selectedIndex = index;
+        dayCache = period.workDays[index].clone();
+        print(dayCache.date.toString());
+      });
 }
