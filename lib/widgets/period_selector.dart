@@ -16,6 +16,7 @@ class PeriodSelector extends StatefulWidget {
 class _PeriodSelectorState extends State<PeriodSelector> {
   DateTime periodBegin;
   DateTime periodEnd;
+  bool showApplyBar = false;
 
   @override
   void initState() {
@@ -28,12 +29,17 @@ class _PeriodSelectorState extends State<PeriodSelector> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Column(
         children: <Widget>[
-          Text('Period:'),
-          _createDatePicker(periodBegin),
-          _createDatePicker(periodEnd),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text('Period:'),
+              _createDatePicker(periodBegin),
+              _createDatePicker(periodEnd),
+            ],
+          ),
+          showApplyBar ? _createApplyBar() : Container(),
         ],
       ),
     );
@@ -51,10 +57,32 @@ class _PeriodSelectorState extends State<PeriodSelector> {
           ));
 
   _changeDate(DateTime newValue, DateTime oldValue) => setState(() {
-        if (periodBegin == oldValue) {
-          periodBegin = newValue;
-        } else {
-          periodEnd = newValue;
+        if (null != newValue) {
+          if (periodBegin == oldValue) {
+            periodBegin = newValue;
+          } else {
+            periodEnd = newValue;
+          }
+          showApplyBar = true;
         }
       });
+
+  _createApplyBar() => Container(
+        // margin: EdgeInsets.all(5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            RaisedButton(
+              color: Colors.red,
+              child: Icon(Icons.clear),
+              onPressed: () => setState(() => showApplyBar = false),
+            ),
+            RaisedButton(
+              color: Colors.green,
+              child: Icon(Icons.refresh),
+              onPressed: () => setState(() => showApplyBar = false),
+            ),
+          ],
+        ),
+      );
 }
