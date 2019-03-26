@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:time_track/page/drawer/main_drawer.dart';
 import 'package:time_track/widgets/edit_row.dart';
@@ -20,6 +21,7 @@ class EditPage extends StatefulWidget {
 class _EditPageState extends State<EditPage> {
   int selectedIndex = 0;
   bool _dbLoaded = false;
+  bool resetTimesEditor = false;
   WorkDay dayCache;
   WorkDay _getSelected() => period.workDays[selectedIndex];
   WorkPeriod period = WorkPeriod.dummyList();
@@ -139,7 +141,7 @@ class _EditPageState extends State<EditPage> {
 
   Widget _createTimesEditor() {
     print('building timesEditor');
-    return TimesEditor(
+    var tmp = TimesEditor(
       work: dayCache,
       index: selectedIndex,
       clearButtonEnabled: _getSelected().isEnabled(),
@@ -148,14 +150,23 @@ class _EditPageState extends State<EditPage> {
       cacheDateTime: _cacheDateTime,
       saveChanges: _saveChanges,
       clearEntry: _clearEntry,
+      resetState: resetTimesEditor,
     );
+
+    setState(() => resetTimesEditor = false);
+    return tmp;
   }
 
-  void _selectDay(int index) => setState(() {
-        selectedIndex = index;
-        dayCache = period.workDays[index].clone();
-        print(dayCache.date.toString());
-      });
+  void _selectDay(int index) {
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+    setState(() {
+      resetTimesEditor = true;
+      selectedIndex = index;
+      dayCache = period.workDays[index].clone();
+      print(dayCache.date.toString());
+    });
+  }
 
   void _cacheDateTime(WorkDay day) => setState(() {
         print(day.date);
@@ -179,6 +190,8 @@ class _EditPageState extends State<EditPage> {
   void _clearEntry(int idx) {
     setState(() {
       period.workDays[idx].hoursWorked = 0;
+      dayCache.hoursWorked = 0;
+      resetTimesEditor = true;
       WorkDayDb().insert(period.workDays[idx]).then((onValue) {
         print('db reponse $onValue');
       });

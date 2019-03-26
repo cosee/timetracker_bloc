@@ -4,7 +4,7 @@ import 'package:time_track/util/formatter.dart';
 import 'package:time_track/widgets/drop_down_button.dart';
 import 'package:time_track/model/work_day.dart';
 
-class TimesEditor extends StatelessWidget {
+class TimesEditor extends StatefulWidget {
   TimesEditor(
       {this.work,
       this.index,
@@ -13,11 +13,13 @@ class TimesEditor extends StatelessWidget {
       this.cacheDayTime,
       this.cacheHours,
       this.saveChanges,
-      this.clearEntry});
+      this.clearEntry,
+      this.resetState});
 
   WorkDay work;
   int index;
   bool clearButtonEnabled;
+  bool resetState;
   Function(WorkDay) cacheDateTime;
   Function(int, int) cacheDayTime;
   Function(String) cacheHours;
@@ -25,7 +27,36 @@ class TimesEditor extends StatelessWidget {
   Function(int) clearEntry;
 
   @override
+  State<StatefulWidget> createState() {
+    print("CREATE of _TimesEditorState");
+    return _TimesEditorState();
+  }
+}
+
+class _TimesEditorState extends State<TimesEditor> {
+  TextEditingController controller;
+
+  @override
+  void initState() {
+    _resetState();
+    super.initState();
+  }
+
+  _resetState() {
+    String text = null;
+    if (widget.work.isEnabled()) {
+      text = widget.work.hoursWorked.toString();
+    }
+    controller = TextEditingController(text: text);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (widget.resetState) {
+      print("RESET_STATE = TRUE");
+      _resetState();
+    }
+
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -63,17 +94,17 @@ class TimesEditor extends StatelessWidget {
       Column(children: <Widget>[
         Text('Workday:'),
         DropDownButton(
-          buttonText: fullDateFormatter.format(work.date),
+          buttonText: fullDateFormatter.format(widget.work.date),
           onPressed: () => showDatePicker(
                 context: context,
                 firstDate: DateTime(2018),
                 lastDate: DateTime.now().add(Duration(days: 365)),
-                initialDate: work.date,
+                initialDate: widget.work.date,
               ).then((value) {
-                var d = work.date;
-                work.date = DateTime(
+                var d = widget.work.date;
+                widget.work.date = DateTime(
                     value.year, value.month, value.day, d.hour, d.minute);
-                cacheDateTime(work);
+                widget.cacheDateTime(widget.work);
               }),
         ),
       ]);
@@ -82,12 +113,14 @@ class TimesEditor extends StatelessWidget {
       Column(children: <Widget>[
         Text('Begin:'),
         DropDownButton(
-          buttonText: work.isEnabled() ? work.timeAsString() : '-',
+          buttonText:
+              widget.work.isEnabled() ? widget.work.timeAsString() : '-',
           onPressed: () {
             showTimePicker(
               context: context,
-              initialTime: TimeOfDay(hour: work.hours, minute: work.minutes),
-            ).then((value) => cacheDayTime(value.hour, value.minute));
+              initialTime: TimeOfDay(
+                  hour: widget.work.hours, minute: widget.work.minutes),
+            ).then((value) => widget.cacheDayTime(value.hour, value.minute));
           },
         ),
       ]);
@@ -98,12 +131,13 @@ class TimesEditor extends StatelessWidget {
           SizedBox(
             width: 80,
             child: TextField(
-              controller:
-                  TextEditingController(text: work.hoursWorked.toString()),
+              decoration: InputDecoration(hintText: 'hours'),
+              controller: controller,
               maxLines: 1,
               keyboardType: TextInputType.numberWithOptions(signed: false),
               onChanged: (value) {
-                cacheHours(value);
+                print(value);
+                widget.cacheHours(value);
               },
             ),
           ),
@@ -112,12 +146,16 @@ class TimesEditor extends StatelessWidget {
 
   Widget _createSaveButton() => RaisedButton(
         child: Text('Save Changes'),
-        onPressed: work.isEnabled() ? () => saveChanges(work) : null,
+        onPressed: widget.work.isEnabled()
+            ? () => widget.saveChanges(widget.work)
+            : null,
       );
 
   Widget _createClearButton() => RaisedButton(
         color: Colors.red,
         child: Text('Clear Entry'),
-        onPressed: clearButtonEnabled ? () => clearEntry(index) : null,
+        onPressed: widget.clearButtonEnabled
+            ? () => widget.clearEntry(widget.index)
+            : null,
       );
 }
