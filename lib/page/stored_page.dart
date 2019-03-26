@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:time_track/page/drawer/main_drawer.dart';
+
 class StoredPage extends StatefulWidget {
   StoredPage({this.title});
   final String title;
@@ -18,6 +20,7 @@ class _StoredPageState extends State<StoredPage> {
     return MaterialApp(
       theme: ThemeData(accentColor: Colors.blue),
       home: Scaffold(
+        drawer: MainDrawer(context),
         appBar: AppBar(
           title: Text(widget.title),
         ),
