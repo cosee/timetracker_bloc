@@ -29,22 +29,18 @@ class _EditPageState extends State<EditPage> {
   @override
   void initState() {
     print('selected index: $selectedIndex');
-    _loadDates();
+    _loadDates(DateTime.now(), DateTime.now().add(Duration(days: 30)));
     super.initState();
   }
 
-  void _loadDates() {
+  void _loadDates(DateTime begin, DateTime end) {
     WorkDayDb().getAll().then((workDays) {
       setState(() {
         if (workDays.isNotEmpty) {
           period = WorkPeriod(
-              periodBegin: DateTime.now(),
-              periodEnd: DateTime.now().add(Duration(days: 30)),
-              workDays: workDays);
+              periodBegin: begin, periodEnd: end, workDays: workDays);
         } else {
-          period = WorkPeriod(
-              periodBegin: DateTime.now(),
-              periodEnd: DateTime.now().add(Duration(days: 30)));
+          period = WorkPeriod(periodBegin: begin, periodEnd: end);
         }
         _dbLoaded = true;
       });
@@ -76,6 +72,7 @@ class _EditPageState extends State<EditPage> {
   _createPeriodSelector() => PeriodSelector(
         DateTime.now(),
         DateTime.now().add(Duration(days: 365)),
+        _selectPeriod,
       );
 
   _createTableHead() => Container(
@@ -138,6 +135,11 @@ class _EditPageState extends State<EditPage> {
     setState(() => resetTimesEditor = false);
     return timesEditor;
   }
+
+  void _selectPeriod(DateTime begin, DateTime end) => setState(() {
+        _dbLoaded = false;
+        _loadDates(begin, end);
+      });
 
   void _selectDay(int index) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');

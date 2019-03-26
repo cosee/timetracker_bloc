@@ -4,10 +4,11 @@ import 'package:time_track/widgets/drop_down_button.dart';
 import 'package:time_track/util/formatter.dart';
 
 class PeriodSelector extends StatefulWidget {
-  PeriodSelector(this.periodBegin, this.periodEnd);
+  PeriodSelector(this.periodBegin, this.periodEnd, this.setPeriod);
 
   final DateTime periodBegin;
   final DateTime periodEnd;
+  final Function(DateTime begin, DateTime end) setPeriod;
 
   @override
   State<StatefulWidget> createState() => _PeriodSelectorState();
@@ -20,9 +21,13 @@ class _PeriodSelectorState extends State<PeriodSelector> {
 
   @override
   void initState() {
+    _initState();
+    super.initState();
+  }
+
+  _initState() {
     periodBegin = widget.periodBegin;
     periodEnd = widget.periodEnd;
-    super.initState();
   }
 
   @override
@@ -67,6 +72,11 @@ class _PeriodSelectorState extends State<PeriodSelector> {
         }
       });
 
+  _resetChanges() => setState(() {
+        showApplyBar = false;
+        _initState();
+      });
+
   _createApplyBar() => Container(
         // margin: EdgeInsets.all(5),
         child: Row(
@@ -75,12 +85,15 @@ class _PeriodSelectorState extends State<PeriodSelector> {
             RaisedButton(
               color: Colors.red,
               child: Icon(Icons.clear),
-              onPressed: () => setState(() => showApplyBar = false),
+              onPressed: _resetChanges(),
             ),
             RaisedButton(
               color: Colors.green,
               child: Icon(Icons.refresh),
-              onPressed: () => setState(() => showApplyBar = false),
+              onPressed: () => setState(() {
+                    showApplyBar = false;
+                    widget.setPeriod(periodBegin, periodEnd);
+                  }),
             ),
           ],
         ),
