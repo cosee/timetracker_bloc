@@ -6,6 +6,7 @@ import 'package:time_track/widgets/edit_row.dart';
 import 'package:time_track/model/work_day.dart';
 import 'package:time_track/model/work_period.dart';
 import 'package:time_track/widgets/times_editor.dart';
+import 'package:time_track/widgets/centered_loading_spinner.dart';
 import 'package:time_track/db/entities/work_day_db.dart';
 
 class EditPage extends StatefulWidget {
@@ -54,33 +55,26 @@ class _EditPageState extends State<EditPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(accentColor: Colors.blue),
-      home: Scaffold(
-        drawer: MainDrawer(context),
-        appBar: AppBar(title: Text(widget.title)),
-        body: _dbLoaded
-            ? Column(
-                children: <Widget>[
-                  _createTableHead(),
-                  Flexible(
-                    flex: 5,
-                    child: _buildTimesList(),
-                  ),
-                  _createTimesEditor(),
-                ],
-              )
-            : Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Text('Loading stored times...')
-                  ],
-                ),
-              ),
-      ),
-    );
+        theme: ThemeData(accentColor: Colors.blue),
+        home: Scaffold(
+          drawer: MainDrawer(context),
+          appBar: AppBar(title: Text(widget.title)),
+          body: _dbLoaded
+              ? _createTable()
+              : CenteredLoadingSpinner(text: 'Loading stored times...'),
+        ));
   }
+
+  _createTable() => Column(
+        children: <Widget>[
+          _createTableHead(),
+          Flexible(
+            flex: 5,
+            child: _buildTimesList(),
+          ),
+          _createTimesEditor(),
+        ],
+      );
 
   _createTableHead() => Container(
         margin: EdgeInsets.only(top: 5),
