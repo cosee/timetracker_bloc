@@ -11,7 +11,16 @@ class MyApp extends StatelessWidget {
   final String title;
   @override
   Widget build(BuildContext context) {
-   
-    return null;
+    return MaterialApp(
+      theme: ThemeData(accentColor: Colors.blue),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+        ),
+        body: Center(
+          child: Text(title),
+        ),
+      ),
+    );
   }
 }
