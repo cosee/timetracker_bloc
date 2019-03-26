@@ -53,7 +53,7 @@ class _EditPageState extends State<EditPage> {
 
   void _initDayCache() {
     if (period?.workDays?.isNotEmpty == true) {
-      dayCache =_getSelected().clone();
+      dayCache = _getSelected().clone();
     }
   }
 
@@ -77,7 +77,15 @@ class _EditPageState extends State<EditPage> {
                   _createTimesEditor(),
                 ],
               )
-            : Center(child: Text('No times stored yet!')),
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Text('Loading stored times...')
+                  ],
+                ),
+              ),
       ),
     );
   }
@@ -174,7 +182,6 @@ class _EditPageState extends State<EditPage> {
       WorkDayDb().insert(period.workDays[idx]).then((onValue) {
         print('db reponse $onValue');
       });
-      
     });
   }
 
