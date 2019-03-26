@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:time_track/page/drawer/main_drawer.dart';
-import 'package:time_track/widgets/edit_row.dart';
 import 'package:time_track/model/work_day.dart';
 import 'package:time_track/model/work_period.dart';
+import 'package:time_track/widgets/period_selector.dart';
+import 'package:time_track/widgets/edit_row.dart';
 import 'package:time_track/widgets/times_editor.dart';
 import 'package:time_track/widgets/centered_loading_spinner.dart';
 import 'package:time_track/db/entities/work_day_db.dart';
@@ -65,6 +66,10 @@ class _EditPageState extends State<EditPage> {
 
   _createTable() => Column(
         children: <Widget>[
+          PeriodSelector(
+            DateTime.now(),
+            DateTime.now().add(Duration(days: 365)),
+          ),
           _createTableHead(),
           Flexible(
             flex: 5,
