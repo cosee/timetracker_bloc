@@ -32,11 +32,34 @@ class _EditPageState extends State<EditPage> {
         ),
         body: Column(
           children: <Widget>[
+            _createTableHead(),
             EditRow(),
-            EditRow()
+            EditRow(),
           ],
         ),
       ),
     );
   }
+
+  _createTableHead() => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Container(
+            width: 70,
+            child: Text('Weekday'),
+          ),
+          Container(
+            width: 80,
+            child: Text('Date'),
+          ),
+          Container(
+            width: 50,
+            child: Text('Begin'),
+          ),
+          Container(
+            width: 100,
+            child: Text('Hours worked'),
+          ),
+        ],
+      );
 }
