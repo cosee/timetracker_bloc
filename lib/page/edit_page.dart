@@ -22,14 +22,13 @@ class _EditPageState extends State<EditPage> {
   int selectedIndex = 0;
   bool _dbLoaded = false;
   bool resetTimesEditor = false;
-  WorkDay dayCache;
+
   WorkDay _getSelected() => period.workDays[selectedIndex];
   WorkPeriod period = WorkPeriod.dummyList();
 
   @override
   void initState() {
     print('selected index: $selectedIndex');
-    _initDayCache();
     _loadDates();
     super.initState();
   }
@@ -47,16 +46,9 @@ class _EditPageState extends State<EditPage> {
               periodBegin: DateTime.now(),
               periodEnd: DateTime.now().add(Duration(days: 30)));
         }
-        _initDayCache();
         _dbLoaded = true;
       });
     });
-  }
-
-  void _initDayCache() {
-    if (period?.workDays?.isNotEmpty == true) {
-      dayCache = _getSelected().clone();
-    }
   }
 
   @override
@@ -65,9 +57,7 @@ class _EditPageState extends State<EditPage> {
       theme: ThemeData(accentColor: Colors.blue),
       home: Scaffold(
         drawer: MainDrawer(context),
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
+        appBar: AppBar(title: Text(widget.title)),
         body: _dbLoaded
             ? Column(
                 children: <Widget>[
@@ -118,9 +108,8 @@ class _EditPageState extends State<EditPage> {
       );
 
   Widget _buildTimesList() {
-    Widget timesList = Center(
-      child: Text("No Times persisted yet"),
-    );
+    Widget timesList = Center(child: Text("No Times persisted yet"));
+
     print('building list!');
     if (period.workDays.length > 0) {
       timesList = ListView.builder(
@@ -142,12 +131,9 @@ class _EditPageState extends State<EditPage> {
   Widget _createTimesEditor() {
     print('building timesEditor');
     var tmp = TimesEditor(
-      work: dayCache,
+      work: _getSelected(),
       index: selectedIndex,
       clearButtonEnabled: _getSelected().isEnabled(),
-      cacheHours: _cacheHours,
-      cacheDayTime: _cacheDayTime,
-      cacheDateTime: _cacheDateTime,
       saveChanges: _saveChanges,
       clearEntry: _clearEntry,
       resetState: resetTimesEditor,
@@ -163,34 +149,12 @@ class _EditPageState extends State<EditPage> {
     setState(() {
       resetTimesEditor = true;
       selectedIndex = index;
-      dayCache = period.workDays[index].clone();
-      print(dayCache.date.toString());
-    });
-  }
-
-  void _cacheDateTime(WorkDay day) => setState(() {
-        print(day.date);
-        dayCache = day.clone();
-      });
-
-  void _cacheDayTime(int hours, int minutes) => setState(() {
-        print('hours:$hours, mintues:$minutes');
-        dayCache.hours = hours;
-        dayCache.minutes = minutes;
-      });
-
-  void _cacheHours(String hoursWorked) {
-    setState(() {
-      double hours = double.parse(hoursWorked);
-      print('cacheHours $hours');
-      dayCache.hoursWorked = hours;
     });
   }
 
   void _clearEntry(int idx) {
     setState(() {
       period.workDays[idx].hoursWorked = 0;
-      dayCache.hoursWorked = 0;
       resetTimesEditor = true;
       WorkDayDb().insert(period.workDays[idx]).then((onValue) {
         print('db reponse $onValue');
