@@ -4,6 +4,7 @@ import 'package:time_track/page/drawer/main_drawer.dart';
 import 'package:time_track/widgets/edit_row.dart';
 import 'package:time_track/model/work_day.dart';
 import 'package:time_track/model/work_period.dart';
+import 'package:time_track/widgets/times_editor.dart';
 import 'package:time_track/db/entities/work_day_db.dart';
 
 class EditPage extends StatefulWidget {
@@ -72,6 +73,7 @@ class _EditPageState extends State<EditPage> {
                     flex: 5,
                     child: _buildTimesList(),
                   ),
+                  _createTimesEditor(),
                 ],
               )
             : Center(child: Text('No times stored yet!')),
@@ -126,9 +128,68 @@ class _EditPageState extends State<EditPage> {
         isSelected: selectedIndex == index,
       );
 
+  Widget _createTimesEditor() {
+    print('building timesEditor');
+    return TimesEditor(
+      work: dayCache,
+      index: selectedIndex,
+      cacheHours: _cacheHours,
+      cacheDayTime: _cacheDayTime,
+      cacheDateTime: _cacheDateTime,
+      saveChanges: _saveChanges,
+      clearEntry: _clearEntry,
+    );
+  }
+
   void _selectDay(int index) => setState(() {
         selectedIndex = index;
         dayCache = period.workDays[index].clone();
         print(dayCache.date.toString());
+      });
+
+  void _cacheDateTime(WorkDay day) => setState(() {
+        print(day.date);
+        dayCache = day.clone();
+      });
+
+  void _cacheDayTime(int hours, int minutes) => setState(() {
+        print('hours:$hours, mintues:$minutes');
+        dayCache.hours = hours;
+        dayCache.minutes = minutes;
+      });
+
+  void _cacheHours(String hoursWorked) {
+    setState(() {
+      double hours = double.parse(hoursWorked);
+      print('cacheHours $hours');
+      dayCache.hoursWorked = hours;
+    });
+  }
+
+  void _clearEntry(int idx) {
+    setState(() {
+      period.workDays[idx].hoursWorked = 0;
+      WorkDayDb().insert(period.workDays[idx]).then((onValue) {
+        print('db reponse $onValue');
+      });
+    });
+  }
+
+  //Finds indext of date
+  void _saveChanges(WorkDay day) => setState(() {
+        int index = period.workDays.indexWhere((item) {
+          return item.date.year == day.date.year &&
+              item.date.month == day.date.month &&
+              item.date.day == day.date.day;
+        });
+
+        period.workDays[index] = day.clone();
+
+        WorkDayDb().insert(period.workDays[index]).then((onValue) {
+          print('db reponse $onValue');
+        });
+
+        _selectDay(index); //AFTER changing the values!
+        print('saveChanges idx $index');
       });
 }
