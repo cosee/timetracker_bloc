@@ -48,7 +48,7 @@ class WorkDayDb {
     if (workDay.hoursWorked <= 0) {
       //Delete entry instead
       return await db.delete(TABLE_NAME,
-          where: "date = ?", whereArgs: [workDay.date.millisecondsSinceEpoch]);
+          where: 'date = ?', whereArgs: [workDay.date.millisecondsSinceEpoch]);
     }
     return await db.insert(TABLE_NAME, workDay.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
@@ -60,7 +60,7 @@ class WorkDayDb {
         DateTime(workDay.date.year, workDay.date.month, workDay.date.day);
 
     var res = await db.query(TABLE_NAME,
-        where: "date = ?", whereArgs: [workDay.date.millisecondsSinceEpoch]);
+        where: 'date = ?', whereArgs: [workDay.date.millisecondsSinceEpoch]);
     return res.isNotEmpty ? fromJson(res.first) : null;
   }
 

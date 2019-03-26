@@ -32,26 +32,29 @@ class _PeriodSelectorState extends State<PeriodSelector> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Text('Period:'),
-          _createDatePicker(
-            periodBegin,
-            (value) => setState(() => periodBegin = value),
-          ),
-          _createDatePicker(
-            periodEnd,
-            (value) => setState(() => periodEnd = value),
-          ),
+          _createDatePicker(periodBegin),
+          _createDatePicker(periodEnd),
         ],
       ),
     );
   }
 
-  _createDatePicker(DateTime initialDate, Function(DateTime) then) =>
-      DropDownButton(
-          buttonText: dateFormatter.format(initialDate),
-          onPressed: () => showDatePicker(
-                context: context,
-                firstDate: DateTime.now().subtract(Duration(days: 356)),
-                lastDate: DateTime.now().add(Duration(days: 365)),
-                initialDate: initialDate,
-              ).then(then));
+  _createDatePicker(DateTime initialDate) => DropDownButton(
+      buttonText: dateFormatter.format(initialDate),
+      onPressed: () => showDatePicker(
+            context: context,
+            firstDate: DateTime.now().subtract(Duration(days: 356)),
+            lastDate: DateTime.now().add(Duration(days: 365)),
+            initialDate: initialDate,
+          ).then(
+            (value) => _changeDate(value, initialDate),
+          ));
+
+  _changeDate(DateTime newValue, DateTime oldValue) => setState(() {
+        if (periodBegin == oldValue) {
+          periodBegin = newValue;
+        } else {
+          periodEnd = newValue;
+        }
+      });
 }

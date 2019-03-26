@@ -22,7 +22,7 @@ class TimesEditor extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    print("CREATE of _TimesEditorState");
+    print('CREATE of _TimesEditorState');
     return _TimesEditorState();
   }
 }
@@ -67,7 +67,7 @@ class _TimesEditorState extends State<TimesEditor> {
   Widget build(BuildContext context) {
     if (widget.resetState) {
       widget.resetState = false;
-      print("RESET_STATE = TRUE");
+      print('TimesEditor - resetState:true');
       _resetState();
     }
 
@@ -115,11 +115,6 @@ class _TimesEditorState extends State<TimesEditor> {
                 lastDate: DateTime.now().add(Duration(days: 365)),
                 initialDate: widget.work.date,
               ).then(_cacheDateTime),
-          //   (value) {
-
-          //     _cacheDateTime(widget.work);
-          //   },
-          // ),
         ),
       ]);
 

@@ -66,17 +66,16 @@ class _EditPageState extends State<EditPage> {
 
   _createTable() => Column(
         children: <Widget>[
-          PeriodSelector(
-            DateTime.now(),
-            DateTime.now().add(Duration(days: 365)),
-          ),
+          _createPeriodSelector(),
           _createTableHead(),
-          Flexible(
-            flex: 5,
-            child: _buildTimesList(),
-          ),
+          _buildTimesList(),
           _createTimesEditor(),
         ],
+      );
+
+  _createPeriodSelector() => PeriodSelector(
+        DateTime.now(),
+        DateTime.now().add(Duration(days: 365)),
       );
 
   _createTableHead() => Container(
@@ -105,7 +104,7 @@ class _EditPageState extends State<EditPage> {
       );
 
   Widget _buildTimesList() {
-    Widget timesList = Center(child: Text("No Times persisted yet"));
+    Widget timesList = Center(child: Text('No Times persisted yet'));
 
     print('building list!');
     if (period.workDays.length > 0) {
@@ -115,7 +114,7 @@ class _EditPageState extends State<EditPage> {
       );
     }
 
-    return timesList;
+    return Flexible(flex: 5, child: timesList);
   }
 
   Widget _buildProductItem(BuildContext context, int index) => EditRow(
@@ -127,7 +126,7 @@ class _EditPageState extends State<EditPage> {
 
   Widget _createTimesEditor() {
     print('building timesEditor');
-    var tmp = TimesEditor(
+    var timesEditor = TimesEditor(
       work: _getSelected(),
       index: selectedIndex,
       clearButtonEnabled: _getSelected().isEnabled(),
@@ -137,7 +136,7 @@ class _EditPageState extends State<EditPage> {
     );
 
     setState(() => resetTimesEditor = false);
-    return tmp;
+    return timesEditor;
   }
 
   void _selectDay(int index) {

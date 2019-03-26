@@ -23,9 +23,9 @@ class WorkDay {
   isEnabled() => (hoursWorked ?? 0) > 0;
 
   Map<String, dynamic> toJson() => {
-        "date": date.millisecondsSinceEpoch,
-        "minutes": minutes,
-        "hours": hours,
-        "hoursWorked": hoursWorked,
+        'date': date.millisecondsSinceEpoch,
+        'minutes': minutes,
+        'hours': hours,
+        'hoursWorked': hoursWorked,
       };
 }

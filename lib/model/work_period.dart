@@ -12,7 +12,7 @@ class WorkPeriod {
       bool generateMissingDays = true}) {
     var delta = periodBegin.difference(periodEnd);
     var days = sqrt(delta.inDays * delta.inDays).toInt();
-    print('delta.inDays:${delta.inDays}');
+    print('delta.inDays:$days');
     if (null == workDays) {
       workDays = List<WorkDay>();
     }
