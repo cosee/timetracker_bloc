@@ -18,19 +18,45 @@ class EditPage extends StatefulWidget {
   }
 }
 
-class _EditPageState extends State<EditPage> {
+class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
   int selectedIndex = 0;
   bool _dbLoaded = false;
   bool resetTimesEditor = false;
+  bool _showDrawerContents = false;
+  WorkPeriod period = WorkPeriod.dummyList();
+  AnimationController _animationController;
+  Animation<double> _drawerContentsOpacity;
+  Animation<Offset> _drawerDetailsPosition;
+
+  static final Animatable<Offset> _drawerDetailsTween = Tween<Offset>(
+    begin: const Offset(0.0, 1.0),
+    end: Offset.zero,
+  ).chain(CurveTween(
+    curve: Curves.fastOutSlowIn,
+  ));
 
   WorkDay _getSelected() => period.workDays[selectedIndex];
-  WorkPeriod period = WorkPeriod.dummyList();
 
   @override
   void initState() {
     print('selected index: $selectedIndex');
     _loadDates(DateTime.now(), DateTime.now().add(Duration(days: 30)));
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _drawerContentsOpacity = CurvedAnimation(
+      parent: ReverseAnimation(_animationController),
+      curve: Curves.fastOutSlowIn,
+    );
+    _drawerDetailsPosition = _animationController.drive(_drawerDetailsTween);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   void _loadDates(DateTime begin, DateTime end) {
@@ -123,13 +149,16 @@ class _EditPageState extends State<EditPage> {
 
   Widget _createTimesEditor() {
     print('building timesEditor');
-    var timesEditor = TimesEditor(
-      work: _getSelected(),
-      index: selectedIndex,
-      clearButtonEnabled: _getSelected().isEnabled(),
-      saveChanges: _saveChanges,
-      clearEntry: _clearEntry,
-      resetState: resetTimesEditor,
+    var timesEditor = SlideTransition(
+      position: _drawerDetailsPosition,
+      child: TimesEditor(
+        work: _getSelected(),
+        index: selectedIndex,
+        clearButtonEnabled: _getSelected().isEnabled(),
+        saveChanges: _saveChanges,
+        clearEntry: _clearEntry,
+        resetState: resetTimesEditor,
+      ),
     );
 
     setState(() => resetTimesEditor = false);
@@ -142,6 +171,7 @@ class _EditPageState extends State<EditPage> {
       });
 
   void _selectDay(int index) {
+    _showDrawer(index);
     SystemChannels.textInput.invokeMethod('TextInput.hide');
 
     setState(() {
@@ -174,4 +204,23 @@ class _EditPageState extends State<EditPage> {
         _selectDay(index); //AFTER changing the values!
         print('saveChanges idx $index');
       });
+
+/**
+ * Slide in on each click on a row. Slide out on second click on same row.
+ * Stays out while clicking on different row.
+ */
+  _showDrawer(int index) {
+    print('$_showDrawerContents; $selectedIndex; $index');
+    if (selectedIndex == index) {
+      _showDrawerContents = !_showDrawerContents;
+      _showDrawerContents
+          ? _animationController.forward()
+          : _animationController.reverse();
+    } else {
+      if (!_showDrawerContents) {
+        _showDrawerContents = !_showDrawerContents;
+        _animationController.forward();
+      }
+    }
+  }
 }
