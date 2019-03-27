@@ -22,34 +22,16 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
   int selectedIndex = 0;
   bool _dbLoaded = false;
   bool resetTimesEditor = false;
-  bool _showDrawerContents = false;
   WorkPeriod period = WorkPeriod.dummyList();
-  AnimationController _animationController;
-  Animation<double> _drawerContentsOpacity;
-  Animation<Offset> _drawerDetailsPosition;
-
-  static final Animatable<Offset> _drawerDetailsTween = Tween<Offset>(
-    begin: const Offset(0.0, 1.0),
-    end: Offset.zero,
-  ).chain(CurveTween(
-    curve: Curves.fastOutSlowIn,
-  ));
-
   WorkDay _getSelected() => period.workDays[selectedIndex];
+
+  AnimationController _animationController;
+  double _animatedHeight = 0;
 
   @override
   void initState() {
     print('selected index: $selectedIndex');
     _loadDates(DateTime.now(), DateTime.now().add(Duration(days: 30)));
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-    _drawerContentsOpacity = CurvedAnimation(
-      parent: ReverseAnimation(_animationController),
-      curve: Curves.fastOutSlowIn,
-    );
-    _drawerDetailsPosition = _animationController.drive(_drawerDetailsTween);
     super.initState();
   }
 
@@ -149,15 +131,18 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
 
   Widget _createTimesEditor() {
     print('building timesEditor');
-    var timesEditor = SlideTransition(
-      position: _drawerDetailsPosition,
-      child: TimesEditor(
-        work: _getSelected(),
-        index: selectedIndex,
-        clearButtonEnabled: _getSelected().isEnabled(),
-        saveChanges: _saveChanges,
-        clearEntry: _clearEntry,
-        resetState: resetTimesEditor,
+    var timesEditor = AnimatedContainer(
+      duration: const Duration(milliseconds: 120),
+      height: _animatedHeight,
+      child: SingleChildScrollView(
+        child: TimesEditor(
+          work: _getSelected(),
+          index: selectedIndex,
+          clearButtonEnabled: _getSelected().isEnabled(),
+          saveChanges: _saveChanges,
+          clearEntry: _clearEntry,
+          resetState: resetTimesEditor,
+        ),
       ),
     );
 
@@ -210,17 +195,18 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
  * Stays out while clicking on different row.
  */
   _showDrawer(int index) {
-    print('$_showDrawerContents; $selectedIndex; $index');
-    if (selectedIndex == index) {
-      _showDrawerContents = !_showDrawerContents;
-      _showDrawerContents
-          ? _animationController.forward()
-          : _animationController.reverse();
-    } else {
-      if (!_showDrawerContents) {
-        _showDrawerContents = !_showDrawerContents;
-        _animationController.forward();
+    setState(() {
+      print(
+          '_animatedHeight:$_animatedHeight; selectedIndex:$selectedIndex; index:$index');
+      if (selectedIndex == index) {
+        _animatedHeight != 0.0
+            ? _animatedHeight = 0.0
+            : _animatedHeight = 133.0;
+      } else {
+        if (_animatedHeight == 0.0) {
+          _animatedHeight = 133.0;
+        }
       }
-    }
+    });
   }
 }

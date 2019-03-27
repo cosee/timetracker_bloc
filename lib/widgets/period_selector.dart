@@ -83,9 +83,9 @@ class _PeriodSelectorState extends State<PeriodSelector> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             RaisedButton(
-              color: Colors.red,
+              color: Colors.grey,
               child: Icon(Icons.clear),
-              onPressed: _resetChanges(),
+              onPressed: _resetChanges,
             ),
             RaisedButton(
               color: Colors.green,
