@@ -20,12 +20,12 @@ class MainDrawer extends Drawer {
                 ),
                 ListTile(
                   title: Text('Edit work times'),
-                  enabled: page == EditPage,
+                  enabled: page != EditPage,
                   onTap: () => Navigator.pushReplacementNamed(
                       context, staticRoutes[EditPage]),
                 ),
                 ListTile(
-                  enabled: page == StoredPage,
+                  enabled: page != StoredPage,
                   title: Text('Stored work times'),
                   onTap: () => Navigator.pushReplacementNamed(
                       context, staticRoutes[StoredPage]),
