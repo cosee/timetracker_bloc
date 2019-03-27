@@ -79,7 +79,7 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
 
   _createPeriodSelector() => PeriodSelector(
         DateTime.now(),
-        DateTime.now().add(Duration(days: 365)),
+        DateTime.now().add(Duration(days: 31)),
         _selectPeriod,
       );
 
