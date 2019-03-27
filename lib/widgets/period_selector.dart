@@ -17,7 +17,8 @@ class PeriodSelector extends StatefulWidget {
 class _PeriodSelectorState extends State<PeriodSelector> {
   DateTime periodBegin;
   DateTime periodEnd;
-  bool showApplyBar = false;
+  double _applyBarHeight = 0.0;
+  double _applyBarOpacity = 0.0;
 
   @override
   void initState() {
@@ -44,7 +45,7 @@ class _PeriodSelectorState extends State<PeriodSelector> {
               _createDatePicker(periodEnd),
             ],
           ),
-          showApplyBar ? _createApplyBar() : Container(),
+          _createApplyBar()
         ],
       ),
     );
@@ -68,34 +69,44 @@ class _PeriodSelectorState extends State<PeriodSelector> {
           } else {
             periodEnd = newValue;
           }
-          showApplyBar = true;
+          _applyBarHeight = 50;
+          _applyBarOpacity = 1.0;
         }
       });
 
   _resetChanges() => setState(() {
-        showApplyBar = false;
+        _applyBarHeight = 0.0;
+        _applyBarOpacity = 0.0;
         _initState();
       });
 
-  _createApplyBar() => Container(
-        // margin: EdgeInsets.all(5),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            RaisedButton(
-              color: Colors.grey,
-              child: Icon(Icons.clear),
-              onPressed: _resetChanges,
+  _createApplyBar() => AnimatedContainer(
+        duration: Duration(milliseconds: 120),
+        height: _applyBarHeight,
+        child: AnimatedOpacity(
+          duration: Duration(milliseconds: 120),
+          opacity: _applyBarOpacity,
+          child: Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                RaisedButton(
+                  color: Colors.grey,
+                  child: Icon(Icons.clear),
+                  onPressed: _resetChanges,
+                ),
+                RaisedButton(
+                  color: Colors.green[300],
+                  child: Icon(Icons.refresh),
+                  onPressed: () => setState(() {
+                        _applyBarHeight = 0.0;
+                        _applyBarOpacity = 0.0;
+                        widget.setPeriod(periodBegin, periodEnd);
+                      }),
+                ),
+              ],
             ),
-            RaisedButton(
-              color: Colors.green,
-              child: Icon(Icons.refresh),
-              onPressed: () => setState(() {
-                    showApplyBar = false;
-                    widget.setPeriod(periodBegin, periodEnd);
-                  }),
-            ),
-          ],
+          ),
         ),
       );
 }
