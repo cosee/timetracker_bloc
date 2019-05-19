@@ -13,12 +13,12 @@ class TimesEditor extends StatefulWidget {
       this.clearEntry,
       this.resetState});
 
-  WorkDay work;
-  int index;
-  bool clearButtonEnabled;
-  bool resetState;
-  Function(WorkDay) saveChanges;
-  Function(int) clearEntry;
+  final WorkDay work;
+  final int index;
+  final bool clearButtonEnabled;
+  bool resetState;   //FIXME: This is BS. BLoC pattern should solve these issues.
+  final Function(WorkDay) saveChanges;
+  final Function(int) clearEntry;
 
   @override
   State<StatefulWidget> createState() {
