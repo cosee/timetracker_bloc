@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:time_track/page/edit_page.dart';
-import 'package:time_track/page/stored_page.dart';
+import 'package:time_track/view/pages/edit_page.dart';
+import 'package:time_track/view/pages/stored_page.dart';
 
 Map<Type, String> staticRoutes = {
   EditPage: '/',

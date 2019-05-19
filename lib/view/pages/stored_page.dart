@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:time_track/page/drawer/main_drawer.dart';
+import 'package:time_track/view/pages/drawer/main_drawer.dart';
 
 class StoredPage extends StatefulWidget {
   @override

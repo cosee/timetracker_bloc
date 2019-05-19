@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:time_track/model/work_day.dart';
-import 'package:time_track/util/formatter.dart';
+import 'package:time_track/shared/helper/formatter.dart';
 
 class EditRow extends StatelessWidget {
   EditRow({

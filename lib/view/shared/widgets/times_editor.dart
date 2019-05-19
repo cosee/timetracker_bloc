@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:time_track/util/formatter.dart';
-import 'package:time_track/widgets/drop_down_button.dart';
+import 'package:time_track/shared/helper/formatter.dart';
+import 'package:time_track/view/shared/widgets/drop_down_button.dart';
 import 'package:time_track/model/work_day.dart';
 
 class TimesEditor extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:time_track/model/work_day.dart';
-import 'package:time_track/util/clone.dart';
-import 'package:time_track/util/compare.dart';
+import 'package:time_track/shared/helper/clone.dart';
+import 'package:time_track/shared/helper/compare.dart';
 
 class WorkPeriod {
   WorkPeriod(

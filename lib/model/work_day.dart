@@ -1,4 +1,4 @@
-import 'package:time_track/util/clone.dart';
+import 'package:time_track/shared/helper/clone.dart';
 
 class WorkDay {
   WorkDay({this.date, this.hours, this.minutes, this.hoursWorked});
