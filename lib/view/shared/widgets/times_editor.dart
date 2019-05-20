@@ -2,70 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:time_track/shared/blocs/main/blocs.dart';
 
 import 'package:time_track/shared/helper/formatter.dart';
+import 'package:time_track/view/shared/widgets/centered_loading_spinner.dart';
 import 'package:time_track/view/shared/widgets/drop_down_button.dart';
 import 'package:time_track/model/work_day.dart';
 
 class TimesEditor extends StatelessWidget {
+  WorkDayState lastState;
+
   TimesEditor({
-    this.work,
     this.index,
     this.clearButtonEnabled,
-    this.saveChanges,
-    this.clearEntry,
-    // this.resetState,
-  }) {
-    dayCache = this.work;
-  }
+    this.editorBloc,
+  });
 
-  final WorkDayState work;
+  final EditorBloc editorBloc;
+
+  // final WorkDayState work;
   final int index;
   final bool clearButtonEnabled;
-  // bool resetState; //FIXME: This is BS. BLoC pattern should solve these issues.
-  final Function(WorkDayState) saveChanges;
-  final Function(int) clearEntry;
-
-  // @override
-  // State<StatefulWidget> createState() {
-  //   print('CREATE of _TimesEditorState');
-  //   return _TimesEditorState();
-  // }
 
   TextEditingController controller;
-  WorkDayState dayCache;
 
-  void _cacheDateTime(DateTime time)  {}
-  // setState(() {
-  //     //   dayCache.date = DateTime(time.year, time.month, time.day,
-  //     //       dayCache.date.hour, dayCache.date.minute);
-  //     });
-
-  void _cacheDayTime(TimeOfDay time) {}
-  // => setState(() {
-  //       // print('hours:${time.hour}, mintues:${time.minute}');
-  //       // dayCache.hours = time.hour;
-  //       // dayCache.minutes = time.minute;
-  //     });
-
-  void _cacheHours(String hoursWorked) {
-    // setState(() {
-    //   // double hours = double.parse(hoursWorked);
-    //   // print('cacheHours $hours');
-    //   // dayCache.hoursWorked = hours;
-    // });
+  void _cacheDateTime(DateTime date) {
+    editorBloc.cacheChanges.add(CacheChangeAction.cacheDate(date));
   }
 
-  // @override
-  // void initState() {
-  //   _resetState();
-  //   super.initState();
-  // }
+  void _cacheDayTime(TimeOfDay time) {
+    var timeOfDay = DateTime(
+      0,
+      0,
+      0,
+      time.hour,
+      time.minute,
+    );
+    editorBloc.cacheChanges.add(CacheChangeAction.cacheTime(timeOfDay));
+  }
 
-  // _resetState() {
-  //   controller = TextEditingController(
-  //     text: widget.work.isEnabled() ? widget.work.hoursWorked.toString() : null,
-  //   );
-  //   dayCache = widget.work;
-  // }
+  void _cacheWorkedHours(String hoursWorked) {
+    editorBloc.cacheChanges.add(CacheChangeAction.cacheWorkHours(hoursWorked));
+  }
+
+  _resetState() {
+    print('Reset state');
+    String text =
+        lastState.isEnabled() ? lastState.hoursWorked.toString() : null;
+    if (null == controller) {
+      controller = TextEditingController(text: text);
+    }
+    controller.text = text;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,25 +71,44 @@ class TimesEditor extends StatelessWidget {
           ),
         ),
       ),
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              _createWorkdayColumn(context),
-              _createWorkBeginColumn(context),
-              _createWorkHoursColumn(),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              _createClearButton(),
-              _createSaveButton(),
-            ],
-          ),
-        ],
-      ),
+      child: StreamBuilder(
+          stream: editorBloc.state,
+          // initialData: editorBloc.initialState,
+          builder:
+              (BuildContext context, AsyncSnapshot<WorkDayState> snapshot) {
+            if (snapshot.hasData) {
+              lastState = snapshot.data;
+              if (null == controller?.text ||
+                  controller.text.isEmpty ||
+                  double.parse(controller?.text) != lastState.hours) {
+                _resetState();
+              }
+            }
+
+            return snapshot.hasData
+                ? Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          _createWorkdayColumn(context),
+                          _createWorkBeginColumn(context),
+                          _createWorkHoursColumn(),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          _createClearButton(),
+                          _createSaveButton(),
+                        ],
+                      ),
+                    ],
+                  )
+                : CenteredLoadingSpinner(
+                    text: 'DOOM!',
+                  );
+          }),
     );
   }
 
@@ -112,12 +116,13 @@ class TimesEditor extends StatelessWidget {
       Column(children: <Widget>[
         Text('Workday:'),
         DropDownButton(
-          buttonText: fullDateFormatter.format(dayCache.date),
+          buttonText: fullDateFormatter.format(lastState.date),
           onPressed: () => showDatePicker(
                 context: context,
                 firstDate: DateTime(2018),
                 lastDate: DateTime.now().add(Duration(days: 365)),
-                initialDate: work.date,
+                // initialDate: editorBloc.initialState.date,
+                initialDate: lastState.date,
               ).then(_cacheDateTime),
         ),
       ]);
@@ -126,12 +131,18 @@ class TimesEditor extends StatelessWidget {
       Column(children: <Widget>[
         Text('Begin:'),
         DropDownButton(
-          buttonText: dayCache.isEnabled() ? dayCache.timeAsString() : '-',
+          buttonText: lastState.isEnabled() ? lastState.timeAsString() : '-',
           onPressed: () {
             showTimePicker(
               context: context,
               initialTime: TimeOfDay(
-                  hour: work.hours, minute: work.minutes),
+                hour: lastState.hours,
+                minute: lastState.minutes,
+              )
+
+              // editorBloc.initialState.;}
+              ,
+              // TimeOfDay(hour: work.hours, minute: work.minutes),
             ).then(_cacheDayTime);
           },
         ),
@@ -149,7 +160,7 @@ class TimesEditor extends StatelessWidget {
               keyboardType: TextInputType.numberWithOptions(signed: false),
               onChanged: (value) {
                 print(value);
-                _cacheHours(value);
+                _cacheWorkedHours(value);
               },
             ),
           ),
@@ -158,14 +169,17 @@ class TimesEditor extends StatelessWidget {
 
   Widget _createSaveButton() => RaisedButton(
         child: Text('Save Changes'),
-        onPressed:
-            dayCache.isEnabled() ? () => saveChanges(dayCache) : null,
+        onPressed: lastState.isEnabled()
+            ? () => editorBloc.saveChanges.add(SaveChangesAction(index))
+            : null,
       );
 
   Widget _createClearButton() => RaisedButton(
         color: Colors.red,
         child: Text('Clear Entry'),
-        onPressed:
-            dayCache.isEnabled() ? () => clearEntry(index) : null,
+        onPressed: lastState.isEnabled()
+            ? () => editorBloc.clearEntry.add(ClearEntryAction(index))
+            // clearEntry(index)
+            : null,
       );
 }

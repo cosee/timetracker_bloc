@@ -14,6 +14,7 @@ abstract class WorkDayState
   double get hoursWorked;
 
   WorkDayState._();
+  factory WorkDayState.empty() => _$WorkDayState._();
 
   factory WorkDayState(
     DateTime date,

@@ -7,10 +7,12 @@ import 'package:time_track/view/bloc_provider.dart';
 class MainBloc implements BlocBase {
   // Inputs
   final Sink<SelectDateAction> selectDate;
-  final Sink<ClearEntryAction> clearEntry;
+  final Sink<WorkDayState> updateEntry;
 
   // Outputs
   final Stream<MainState> state;
+  //This is fancy, isn't it?
+  final Stream<WorkDayState> Function(int index) workDayState;
 
   // ! Not BLoC conform convenient method !
   final MainState Function() initialState;
@@ -26,11 +28,11 @@ class MainBloc implements BlocBase {
 
   factory MainBloc(MainBlocInteractor interactor) {
     final selectDateController = StreamController<SelectDateAction>(sync: true);
-    final clearDateController = StreamController<ClearEntryAction>(sync: true);
+    final updateEntryController = StreamController<WorkDayState>(sync: true);
 
     final subscriptions = <StreamSubscription<dynamic>>[
       selectDateController.stream.listen(interactor.selectDate),
-      clearDateController.stream.listen(interactor.clearDate)
+      updateEntryController.stream.listen(interactor.updateEntry)
     ];
 
     return MainBloc._(
@@ -38,7 +40,8 @@ class MainBloc implements BlocBase {
       interactor.state,
       interactor.initialState,
       selectDateController.sink,
-      clearDateController.sink,
+      updateEntryController.sink,
+      interactor.getWorkDayState,
     );
   }
 
@@ -47,6 +50,7 @@ class MainBloc implements BlocBase {
     this.state,
     this.initialState,
     this.selectDate,
-    this.clearEntry,
+    this.updateEntry,
+    this.workDayState,
   );
 }

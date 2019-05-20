@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:time_track/shared/blocs/main/blocs.dart';
 
 import 'package:time_track/view/pages/drawer/main_drawer.dart';
-import 'package:time_track/model/work_day.dart';
-import 'package:time_track/model/work_period.dart';
 import 'package:time_track/view/shared/widgets/period_selector.dart';
 import 'package:time_track/view/shared/widgets/edit_row.dart';
 import 'package:time_track/view/shared/widgets/times_editor.dart';
@@ -158,12 +156,16 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
       height: _animatedHeight,
       child: SingleChildScrollView(
         child: TimesEditor(
-          work: state.selectedDay,
+          // work: state.selectedDay,
           index: state.selectedIndex,
           clearButtonEnabled: state.selectedDay.isEnabled(),
-          saveChanges: _saveChanges,
-          clearEntry: _clearEntry,
+          // saveChanges: _saveChanges,
+          // clearEntry: _clearEntry,
           // resetState: resetTimesEditor,
+          editorBloc: EditorBloc(
+            mainBloc.workDayState(state.selectedIndex),
+            mainBloc.updateEntry,
+          ),
         ),
       ),
     );
@@ -183,34 +185,34 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
     mainBloc.selectDate.add(SelectDateAction(index));
   }
 
-  void _clearEntry(int index) {
-    mainBloc.clearEntry.add(ClearEntryAction(index));
+  // void _clearEntry(int index) {
+  //   mainBloc.clearEntry.add(ClearEntryAction(index));
 
-    // setState(() {
-    //   period.workDays[idx].hoursWorked = 0;
-    //   resetTimesEditor = true;
-    //   WorkDayDb().insert(period.workDays[idx]).then((onValue) {
-    //     print('db reponse $onValue');
-    //   });
-    // });
-  }
+  // setState(() {
+  //   period.workDays[idx].hoursWorked = 0;
+  //   resetTimesEditor = true;
+  //   WorkDayDb().insert(period.workDays[idx]).then((onValue) {
+  //     print('db reponse $onValue');
+  //   });
+  // });
+  // }
 
   //Finds indext of date
-  void _saveChanges(WorkDayState day) => setState(() {
+  // void _saveChanges(WorkDayState day) => setState(() {
 //TODO: implement in SubBloc?
 
-        // int index = period.workDays
-        //     .indexWhere((item) => isSameDate(item.date, day.date));
+  // int index = period.workDays
+  //     .indexWhere((item) => isSameDate(item.date, day.date));
 
-        // period.workDays[index] = day.clone();
+  // period.workDays[index] = day.clone();
 
-        // WorkDayDb().insert(period.workDays[index]).then((onValue) {
-        //   print('db reponse $onValue');
-        // });
+  // WorkDayDb().insert(period.workDays[index]).then((onValue) {
+  //   print('db reponse $onValue');
+  // });
 
-        // _selectDay(index); //AFTER changing the values!
-        // print('saveChanges idx $index');
-      });
+  // _selectDay(index); //AFTER changing the values!
+  // print('saveChanges idx $index');
+  // });
 
 /**
  * Slide in on each click on a row. Slide out on second click on same row.

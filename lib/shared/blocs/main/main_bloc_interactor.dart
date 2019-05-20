@@ -1,6 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 
 import 'package:time_track/shared/blocs/main/blocs.dart';
+import 'package:time_track/shared/helper/compare.dart';
 
 class MainBlocInteractor {
   final _state = BehaviorSubject<MainState>.seeded(MainState());
@@ -13,15 +14,28 @@ class MainBlocInteractor {
         state.selectedIndex = action.index;
       });
 
-  void clearDate(ClearEntryAction action) =>
+  void updateEntry(WorkDayState newEntryState) =>
       _statelify((MainStateBuilder state) {
-        print('auy');
-        WorkDayStateBuilder builder =
-            state.workPeriod.workDays[action.index].toBuilder();
+        // WorkDayStateBuilder builder =
+        //     state.workPeriod.workDays[action.index].toBuilder();
+        state.workPeriod.workDays.map((WorkDayState f) {
+          if (isSameDate(f.date, newEntryState.date)) {
+            return newEntryState;
+            // var workDayState = f.toBuilder();
+            // builder.hoursWorked = newEntryState.hoursWorked;
+            // builder.minutes = newEntryState.minutes;
+            // builder.hours = newEntryState.hours;
+            // workDayState.replace(newEntryState);
+          }
+          // return builder.build();
+          return f;
+        });
 
-        builder.hoursWorked = 0;
-        state.workPeriod.workDays[action.index] = builder.build();
+        // state.workPeriod.workDays[action.index] = builder.build();
       });
+
+  Stream<WorkDayState> getWorkDayState(int index) =>
+      state.map((MainState f) => f.workPeriod.workDays[index]);
 
   void _statelify(void stateChange(MainStateBuilder b)) {
     final state = _state.value.toBuilder();
