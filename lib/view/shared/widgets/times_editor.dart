@@ -5,18 +5,19 @@ import 'package:time_track/view/shared/widgets/drop_down_button.dart';
 import 'package:time_track/model/work_day.dart';
 
 class TimesEditor extends StatefulWidget {
-  TimesEditor(
-      {this.work,
-      this.index,
-      this.clearButtonEnabled,
-      this.saveChanges,
-      this.clearEntry,
-      this.resetState});
+  TimesEditor({
+    this.work,
+    this.index,
+    this.clearButtonEnabled,
+    this.saveChanges,
+    this.clearEntry,
+    // this.resetState,
+  });
 
   final WorkDay work;
   final int index;
   final bool clearButtonEnabled;
-  bool resetState;   //FIXME: This is BS. BLoC pattern should solve these issues.
+  // bool resetState; //FIXME: This is BS. BLoC pattern should solve these issues.
   final Function(WorkDay) saveChanges;
   final Function(int) clearEntry;
 
@@ -65,11 +66,11 @@ class _TimesEditorState extends State<TimesEditor> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.resetState) {
-      widget.resetState = false;
-      print('TimesEditor - resetState:true');
-      _resetState();
-    }
+    // if (widget.resetState) {
+    //   widget.resetState = false;
+    //   print('TimesEditor - resetState:true');
+    //   _resetState();
+    // }
 
     return Container(
       padding: EdgeInsets.all(10),

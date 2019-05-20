@@ -19,9 +19,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # Dates and currency conversion
   intl: ^0.15.7
+  
+  # Database
   sqflite: ^1.1.3
-  path_provider: ^0.5.0+1
+
+  # Finding commonly used filesystem locations on iOS and Andorid
+  path_provider: ^1.1.0
+
+  # unmodifiable value
+  built_value: 
+  built_collection:
+  collection:
+
+  # stream
+  rxdart:
   
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -30,6 +44,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+  # For generating built_values
+  build_runner: 
+  built_value_generator: 
 
 
 # For information on the generic Dart part of this file, see the
