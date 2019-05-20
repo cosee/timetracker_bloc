@@ -1,8 +1,11 @@
+export 'package:time_track/view/bloc_provider.dart';
 
+// Blocs:
 export 'package:time_track/shared/blocs/main/main_bloc.dart';
 export 'package:time_track/shared/blocs/main/main_bloc_interactor.dart';
 export 'package:time_track/shared/blocs/main/main_actions.dart';
-export 'package:time_track/shared/blocs/main/main_state.dart';
-export 'package:time_track/shared/blocs/main/main_bloc_interactor.dart';
-export 'package:time_track/view/bloc_provider.dart';
 
+// States:
+export 'package:time_track/shared/blocs/main/states/work_day_state.dart';
+export 'package:time_track/shared/blocs/main/states/main_state.dart';
+export 'package:time_track/shared/blocs/main/states/work_period_state.dart';

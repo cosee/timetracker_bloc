@@ -1,7 +1,12 @@
 import 'package:time_track/shared/helper/clone.dart';
 
 class WorkDay {
-  WorkDay({this.date, this.hours, this.minutes, this.hoursWorked});
+  WorkDay({
+    this.date,
+    this.hours,
+    this.minutes,
+    this.hoursWorked,
+  });
 
   WorkDay clone() => WorkDay(
         date: cloneDT(date),
@@ -15,10 +20,8 @@ class WorkDay {
   int minutes;
   double hoursWorked;
 
-
   timeAsString() => '${_addPadding(hours)}:${_addPadding(minutes)}';
   _addPadding(int value) => value.toString().padLeft(2, '0');
-  
 
   isEnabled() => (hoursWorked ?? 0) > 0;
 
@@ -28,4 +31,8 @@ class WorkDay {
         'hours': hours,
         'hoursWorked': hoursWorked,
       };
+
+  void reset() {
+    hoursWorked = 0;
+  }
 }

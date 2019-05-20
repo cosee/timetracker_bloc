@@ -5,6 +5,10 @@ import 'package:time_track/shared/helper/clone.dart';
 import 'package:time_track/shared/helper/compare.dart';
 
 class WorkPeriod {
+  final DateTime periodBegin;
+  final DateTime periodEnd;
+  List<WorkDay> workDays;
+
   WorkPeriod(
       {this.periodBegin,
       this.periodEnd,
@@ -48,9 +52,9 @@ class WorkPeriod {
     workDays.sort((it, other) => it.date.isBefore(other.date) ? 0 : 1);
   }
 
-  final DateTime periodBegin;
-  final DateTime periodEnd;
-  List<WorkDay> workDays;
+
+
+  ////////////Mocking values:
 
   static WorkPeriod dummyList() {
     DateTime now = DateTime.now();

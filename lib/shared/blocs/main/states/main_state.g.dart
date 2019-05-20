@@ -10,7 +10,7 @@ class _$MainState extends MainState {
   @override
   final int selectedIndex;
   @override
-  final WorkPeriod workPeriod;
+  final WorkPeriodState workPeriod;
 
   factory _$MainState([void Function(MainStateBuilder) updates]) =>
       (new MainStateBuilder()..update(updates)).build();
@@ -60,16 +60,18 @@ class MainStateBuilder implements Builder<MainState, MainStateBuilder> {
   int get selectedIndex => _$this._selectedIndex;
   set selectedIndex(int selectedIndex) => _$this._selectedIndex = selectedIndex;
 
-  WorkPeriod _workPeriod;
-  WorkPeriod get workPeriod => _$this._workPeriod;
-  set workPeriod(WorkPeriod workPeriod) => _$this._workPeriod = workPeriod;
+  WorkPeriodStateBuilder _workPeriod;
+  WorkPeriodStateBuilder get workPeriod =>
+      _$this._workPeriod ??= new WorkPeriodStateBuilder();
+  set workPeriod(WorkPeriodStateBuilder workPeriod) =>
+      _$this._workPeriod = workPeriod;
 
   MainStateBuilder();
 
   MainStateBuilder get _$this {
     if (_$v != null) {
       _selectedIndex = _$v.selectedIndex;
-      _workPeriod = _$v.workPeriod;
+      _workPeriod = _$v.workPeriod?.toBuilder();
       _$v = null;
     }
     return this;
@@ -90,8 +92,22 @@ class MainStateBuilder implements Builder<MainState, MainStateBuilder> {
 
   @override
   _$MainState build() {
-    final _$result = _$v ??
-        new _$MainState._(selectedIndex: selectedIndex, workPeriod: workPeriod);
+    _$MainState _$result;
+    try {
+      _$result = _$v ??
+          new _$MainState._(
+              selectedIndex: selectedIndex, workPeriod: workPeriod.build());
+    } catch (_) {
+      String _$failedField;
+      try {
+        _$failedField = 'workPeriod';
+        workPeriod.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'MainState', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

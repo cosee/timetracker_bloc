@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:time_track/shared/blocs/main/blocs.dart';
 
 import 'package:time_track/shared/helper/formatter.dart';
 import 'package:time_track/view/shared/widgets/drop_down_button.dart';
@@ -14,11 +15,11 @@ class TimesEditor extends StatefulWidget {
     // this.resetState,
   });
 
-  final WorkDay work;
+  final WorkDayState work;
   final int index;
   final bool clearButtonEnabled;
   // bool resetState; //FIXME: This is BS. BLoC pattern should solve these issues.
-  final Function(WorkDay) saveChanges;
+  final Function(WorkDayState) saveChanges;
   final Function(int) clearEntry;
 
   @override
@@ -30,24 +31,24 @@ class TimesEditor extends StatefulWidget {
 
 class _TimesEditorState extends State<TimesEditor> {
   TextEditingController controller;
-  WorkDay dayCache;
+  WorkDayState dayCache;
 
   void _cacheDateTime(DateTime time) => setState(() {
-        dayCache.date = DateTime(time.year, time.month, time.day,
-            dayCache.date.hour, dayCache.date.minute);
+      //   dayCache.date = DateTime(time.year, time.month, time.day,
+      //       dayCache.date.hour, dayCache.date.minute);
       });
 
   void _cacheDayTime(TimeOfDay time) => setState(() {
-        print('hours:${time.hour}, mintues:${time.minute}');
-        dayCache.hours = time.hour;
-        dayCache.minutes = time.minute;
+        // print('hours:${time.hour}, mintues:${time.minute}');
+        // dayCache.hours = time.hour;
+        // dayCache.minutes = time.minute;
       });
 
   void _cacheHours(String hoursWorked) {
     setState(() {
-      double hours = double.parse(hoursWorked);
-      print('cacheHours $hours');
-      dayCache.hoursWorked = hours;
+      // double hours = double.parse(hoursWorked);
+      // print('cacheHours $hours');
+      // dayCache.hoursWorked = hours;
     });
   }
 
@@ -61,7 +62,7 @@ class _TimesEditorState extends State<TimesEditor> {
     controller = TextEditingController(
       text: widget.work.isEnabled() ? widget.work.hoursWorked.toString() : null,
     );
-    dayCache = widget.work.clone();
+    dayCache = widget.work;
   }
 
   @override

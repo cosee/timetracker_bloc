@@ -56,6 +56,7 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
             stream: mainBloc.state,
             initialData: mainBloc.initialState(),
             builder: (context, AsyncSnapshot<MainState> snapshot) {
+              print('rebuilding stream ');
               return _buildUI(context, snapshot.data);
             },
           ),
@@ -200,7 +201,7 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
   }
 
   //Finds indext of date
-  void _saveChanges(WorkDay day) => setState(() {
+  void _saveChanges(WorkDayState day) => setState(() {
 //TODO: implement in SubBloc?
 
         // int index = period.workDays

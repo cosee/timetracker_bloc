@@ -13,12 +13,19 @@ class MainBlocInteractor {
         state.selectedIndex = action.index;
       });
 
+  void clearDate(ClearEntryAction action) =>
+      _statelify((MainStateBuilder state) {
+        print('auy');
+        WorkDayStateBuilder builder =
+            state.workPeriod.workDays[action.index].toBuilder();
+
+        builder.hoursWorked = 0;
+        state.workPeriod.workDays[action.index] = builder.build();
+      });
+
   void _statelify(void stateChange(MainStateBuilder b)) {
     final state = _state.value.toBuilder();
     stateChange(state);
     _state.add(state.build());
-  }
-
-  void clearDate(ClearEntryAction event) {
   }
 }

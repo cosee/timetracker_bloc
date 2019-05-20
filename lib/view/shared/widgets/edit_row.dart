@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:time_track/model/work_day.dart';
+import 'package:time_track/shared/blocs/main/blocs.dart';
 import 'package:time_track/shared/helper/formatter.dart';
 
 class EditRow extends StatelessWidget {
@@ -11,7 +11,7 @@ class EditRow extends StatelessWidget {
     this.isSelected = false,
   });
 
-  final WorkDay workEntry;
+  final WorkDayState workEntry;
   final int index;
   final Function(int) selectDay;
   final bool isSelected;
