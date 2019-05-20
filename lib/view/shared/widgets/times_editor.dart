@@ -5,7 +5,7 @@ import 'package:time_track/shared/helper/formatter.dart';
 import 'package:time_track/view/shared/widgets/drop_down_button.dart';
 import 'package:time_track/model/work_day.dart';
 
-class TimesEditor extends StatefulWidget {
+class TimesEditor extends StatelessWidget {
   TimesEditor({
     this.work,
     this.index,
@@ -13,7 +13,9 @@ class TimesEditor extends StatefulWidget {
     this.saveChanges,
     this.clearEntry,
     // this.resetState,
-  });
+  }) {
+    dayCache = this.work;
+  }
 
   final WorkDayState work;
   final int index;
@@ -22,48 +24,48 @@ class TimesEditor extends StatefulWidget {
   final Function(WorkDayState) saveChanges;
   final Function(int) clearEntry;
 
-  @override
-  State<StatefulWidget> createState() {
-    print('CREATE of _TimesEditorState');
-    return _TimesEditorState();
-  }
-}
+  // @override
+  // State<StatefulWidget> createState() {
+  //   print('CREATE of _TimesEditorState');
+  //   return _TimesEditorState();
+  // }
 
-class _TimesEditorState extends State<TimesEditor> {
   TextEditingController controller;
   WorkDayState dayCache;
 
-  void _cacheDateTime(DateTime time) => setState(() {
-      //   dayCache.date = DateTime(time.year, time.month, time.day,
-      //       dayCache.date.hour, dayCache.date.minute);
-      });
+  void _cacheDateTime(DateTime time)  {}
+  // setState(() {
+  //     //   dayCache.date = DateTime(time.year, time.month, time.day,
+  //     //       dayCache.date.hour, dayCache.date.minute);
+  //     });
 
-  void _cacheDayTime(TimeOfDay time) => setState(() {
-        // print('hours:${time.hour}, mintues:${time.minute}');
-        // dayCache.hours = time.hour;
-        // dayCache.minutes = time.minute;
-      });
+  void _cacheDayTime(TimeOfDay time) {}
+  // => setState(() {
+  //       // print('hours:${time.hour}, mintues:${time.minute}');
+  //       // dayCache.hours = time.hour;
+  //       // dayCache.minutes = time.minute;
+  //     });
 
   void _cacheHours(String hoursWorked) {
-    setState(() {
-      // double hours = double.parse(hoursWorked);
-      // print('cacheHours $hours');
-      // dayCache.hoursWorked = hours;
-    });
+    // setState(() {
+    //   // double hours = double.parse(hoursWorked);
+    //   // print('cacheHours $hours');
+    //   // dayCache.hoursWorked = hours;
+    // });
   }
 
-  @override
-  void initState() {
-    _resetState();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   _resetState();
+  //   super.initState();
+  // }
 
-  _resetState() {
-    controller = TextEditingController(
-      text: widget.work.isEnabled() ? widget.work.hoursWorked.toString() : null,
-    );
-    dayCache = widget.work;
-  }
+  // _resetState() {
+  //   controller = TextEditingController(
+  //     text: widget.work.isEnabled() ? widget.work.hoursWorked.toString() : null,
+  //   );
+  //   dayCache = widget.work;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +117,7 @@ class _TimesEditorState extends State<TimesEditor> {
                 context: context,
                 firstDate: DateTime(2018),
                 lastDate: DateTime.now().add(Duration(days: 365)),
-                initialDate: widget.work.date,
+                initialDate: work.date,
               ).then(_cacheDateTime),
         ),
       ]);
@@ -129,7 +131,7 @@ class _TimesEditorState extends State<TimesEditor> {
             showTimePicker(
               context: context,
               initialTime: TimeOfDay(
-                  hour: widget.work.hours, minute: widget.work.minutes),
+                  hour: work.hours, minute: work.minutes),
             ).then(_cacheDayTime);
           },
         ),
@@ -157,13 +159,13 @@ class _TimesEditorState extends State<TimesEditor> {
   Widget _createSaveButton() => RaisedButton(
         child: Text('Save Changes'),
         onPressed:
-            dayCache.isEnabled() ? () => widget.saveChanges(dayCache) : null,
+            dayCache.isEnabled() ? () => saveChanges(dayCache) : null,
       );
 
   Widget _createClearButton() => RaisedButton(
         color: Colors.red,
         child: Text('Clear Entry'),
         onPressed:
-            dayCache.isEnabled() ? () => widget.clearEntry(widget.index) : null,
+            dayCache.isEnabled() ? () => clearEntry(index) : null,
       );
 }

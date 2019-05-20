@@ -181,11 +181,6 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
     _showDrawer(index, state);
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     mainBloc.selectDate.add(SelectDateAction(index));
-
-    // setState(() {
-    //   resetTimesEditor = true;
-    //   selectedIndex = index;
-    // });
   }
 
   void _clearEntry(int index) {
