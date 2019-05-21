@@ -6,10 +6,8 @@ import 'package:time_track/view/pages/drawer/main_drawer.dart';
 import 'package:time_track/view/shared/widgets/period_selector.dart';
 import 'package:time_track/view/shared/widgets/edit_row.dart';
 import 'package:time_track/view/shared/widgets/times_editor.dart';
-import 'package:time_track/view/shared/widgets/centered_loading_spinner.dart';
 import 'package:time_track/db/entities/work_day_db.dart';
 import 'package:time_track/shared/blocs/main/blocs.dart';
-import 'package:time_track/shared/helper/compare.dart';
 
 class EditPage extends StatefulWidget {
   @override
@@ -20,16 +18,6 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
   MainBloc mainBloc = MainBloc(MainBlocInteractor());
-  EditorBloc _editorBloc;
-  EditorBloc get editorBloc {
-    if (null == mainBloc?.initialState()?.selectedIndex ||
-        null == _editorBloc?.initialState?.index ||
-        mainBloc.initialState().selectedIndex !=
-            _editorBloc.initialState.index) {
-      _createEditorBloc();
-    }
-    return _editorBloc;
-  }
 
   // int selectedIndex = 0;
   bool _dbLoaded = false;
@@ -39,22 +27,6 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
 
   AnimationController _animationController;
   double _animatedHeight = 0;
-
-  @override
-  void initState() {
-    // print('selected index: $selectedIndex');
-    // _loadDates(DateTime.now(), DateTime.now().add(Duration(days: 30)));
-    // mainBloc?.initialState()?.selectedIndex ?? 0
-    _createEditorBloc();
-    super.initState();
-  }
-
-  void _createEditorBloc() {
-    _editorBloc = EditorBloc(
-      mainBloc.workDayState(mainBloc?.initialState()?.selectedIndex ?? 0),
-      mainBloc.updateEntry,
-    );
-  }
 
   @override
   void dispose() {
@@ -174,12 +146,11 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
         child: TimesEditor(
           index: state.selectedIndex,
           clearButtonEnabled: state.selectedDay.isEnabled(),
-          editorBloc: editorBloc,
+          stream: mainBloc.workDayState(state.selectedIndex),
+          sink: mainBloc.updateEntry,
         ),
       ),
     );
-
-    // setState(() => resetTimesEditor = false);
     return timesEditor;
   }
 

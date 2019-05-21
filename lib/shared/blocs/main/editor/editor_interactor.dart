@@ -24,7 +24,6 @@ class EditorBlocInteractor {
 
   void clearEntry(ClearEntryAction action) => _statelify((state) {
         state = WorkDayState.empty().toBuilder();
-        // return WorkDayState.empty().toBuilder();
         state.hoursWorked = 0;
         print(state);
       });
@@ -53,7 +52,7 @@ class EditorBlocInteractor {
 
   void _statelify(WorkDayStateBuilder stateChange(WorkDayStateBuilder b)) {
     final state = cachedState.value.toBuilder();
-    var returnedState = stateChange(state);
+    stateChange(state);
     sink.add(state.build()); //Back to where you came from!
   }
 
