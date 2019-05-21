@@ -25,8 +25,8 @@ class TimesEditor extends StatefulWidget {
 class _TimesEditorState extends State<TimesEditor> {
   @override
   void initState() {
-    _resetTextController();
     _createEditorBloc();
+    _resetTextController();
     super.initState();
   }
 
@@ -54,22 +54,28 @@ class _TimesEditorState extends State<TimesEditor> {
 
   @override
   didUpdateWidget(TimesEditor oldWidget) {
+    print('didUpdateWidget');
     if (oldWidget.index != widget.index) {
-      _resetTextController();
       _createEditorBloc();
+      _resetTextController();
     }
     super.didUpdateWidget(oldWidget);
   }
 
-  _resetTextController() {
+  _resetTextController({double value}) {
     print('Reset textController');
-    String text = lastState?.isEnabled() ?? false
-        ? lastState.hoursWorked.toString()
-        : null;
-    if (null == controller) {
+    // print('initial: ${_editorBloc.initialState}');
+    // print('value: ${value}');
+    String text = value?.toString();
+    if (null == text) {
+      text = (_editorBloc.initialState?.isEnabled() ?? false)
+          ? _editorBloc.initialState.hoursWorked.toString()
+          : null;
+    }
+    //Fix this better maybe?
+    if (null == controller || text != controller?.text) {
       controller = TextEditingController(text: text);
     }
-    controller.text = text;
   }
 
   @override
@@ -93,6 +99,7 @@ class _TimesEditorState extends State<TimesEditor> {
             if (snapshot.hasData) {
               //The user can't do anything withouth this being up to date!
               lastState = snapshot.data;
+              _resetTextController(value: snapshot.data.hoursWorked);
 
               return Column(
                 children: <Widget>[

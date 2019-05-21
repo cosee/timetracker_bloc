@@ -5,19 +5,13 @@ import 'package:time_track/shared/blocs/main/blocs.dart';
 class EditorBlocInteractor {
   EditorBlocInteractor(this.sink);
 
-  WorkDayState _lastState;
-  WorkDayState get lastState =>
-      _lastState; //FIXME: This is ugly... find better way
   void updateState(WorkDayState newState) {
     // print('state gets updated from root-stream!');
 
-    _lastState = newState;
     cachedState.add(newState);
   }
 
   final cachedState = BehaviorSubject<WorkDayState>.seeded(null);
-
-  // WorkDayState cachedState;
 
   // Output for TravelBloc update
   Sink<WorkDayState> sink;
