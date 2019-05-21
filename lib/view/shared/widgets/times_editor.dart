@@ -42,7 +42,7 @@ class TimesEditor extends StatelessWidget {
     editorBloc.cacheChanges.add(CacheChangeAction.cacheWorkHours(hoursWorked));
   }
 
-  _resetState() {
+  _resetTextController() {
     print('Reset state');
     String text =
         lastState.isEnabled() ? lastState.hoursWorked.toString() : null;
@@ -54,12 +54,6 @@ class TimesEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // if (widget.resetState) {
-    //   widget.resetState = false;
-    //   print('TimesEditor - resetState:true');
-    //   _resetState();
-    // }
-
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -81,7 +75,7 @@ class TimesEditor extends StatelessWidget {
               if (null == controller?.text ||
                   controller.text.isEmpty ||
                   double.parse(controller?.text) != lastState.hours) {
-                _resetState();
+                _resetTextController();
               }
             }
 
@@ -127,26 +121,29 @@ class TimesEditor extends StatelessWidget {
         ),
       ]);
 
-  Widget _createWorkBeginColumn(BuildContext context) =>
-      Column(children: <Widget>[
-        Text('Begin:'),
-        DropDownButton(
-          buttonText: lastState.isEnabled() ? lastState.timeAsString() : '-',
-          onPressed: () {
-            showTimePicker(
-              context: context,
-              initialTime: TimeOfDay(
-                hour: lastState.hours,
-                minute: lastState.minutes,
-              )
+  Widget _createWorkBeginColumn(BuildContext context) {
+    print('creating workbeginColumn: ${lastState.timeAsString()}');
 
-              // editorBloc.initialState.;}
-              ,
-              // TimeOfDay(hour: work.hours, minute: work.minutes),
-            ).then(_cacheDayTime);
-          },
-        ),
-      ]);
+    return Column(children: <Widget>[
+      Text('Begin:'),
+      DropDownButton(
+        buttonText: lastState.isEnabled() ? lastState.timeAsString() : '-',
+        onPressed: () {
+          showTimePicker(
+            context: context,
+            initialTime: TimeOfDay(
+              hour: lastState.hours,
+              minute: lastState.minutes,
+            )
+
+            // editorBloc.initialState.;}
+            ,
+            // TimeOfDay(hour: work.hours, minute: work.minutes),
+          ).then(_cacheDayTime);
+        },
+      ),
+    ]);
+  }
 
   Widget _createWorkHoursColumn() => Column(
         children: <Widget>[

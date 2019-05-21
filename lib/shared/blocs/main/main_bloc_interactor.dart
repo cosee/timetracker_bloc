@@ -16,22 +16,14 @@ class MainBlocInteractor {
 
   void updateEntry(WorkDayState newEntryState) =>
       _statelify((MainStateBuilder state) {
-        // WorkDayStateBuilder builder =
-        //     state.workPeriod.workDays[action.index].toBuilder();
         state.workPeriod.workDays.map((WorkDayState f) {
           if (isSameDate(f.date, newEntryState.date)) {
+            print('found entry, updating it: ${f.date}');
             return newEntryState;
-            // var workDayState = f.toBuilder();
-            // builder.hoursWorked = newEntryState.hoursWorked;
-            // builder.minutes = newEntryState.minutes;
-            // builder.hours = newEntryState.hours;
-            // workDayState.replace(newEntryState);
           }
-          // return builder.build();
           return f;
         });
 
-        // state.workPeriod.workDays[action.index] = builder.build();
       });
 
   Stream<WorkDayState> getWorkDayState(int index) =>

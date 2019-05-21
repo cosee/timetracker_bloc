@@ -13,6 +13,8 @@ abstract class WorkDayState
   int get minutes;
   double get hoursWorked;
 
+  int get index; //for editor
+
   WorkDayState._();
   factory WorkDayState.empty() => _$WorkDayState._();
 
@@ -21,12 +23,14 @@ abstract class WorkDayState
     int hours,
     int minutes,
     double hoursWorked,
+    int index,
   ) =>
       _$WorkDayState._(
         date: date,
         hours: hours,
         minutes: minutes,
         hoursWorked: hoursWorked,
+        index: index,
       );
 
   timeAsString() => '${_addPadding(hours)}:${_addPadding(minutes)}';
@@ -41,10 +45,14 @@ abstract class WorkDayState
         hoursWorked: hoursWorked,
       );
 
-  static WorkDayState from(WorkDay workDay) => WorkDayState(
+  static WorkDayState from(WorkDay workDay, int index) => WorkDayState(
         workDay.date,
         workDay.hours,
         workDay.minutes,
         workDay.hoursWorked,
+        index,
       );
+
+  String toString() =>
+      'date: $date\nhours: $hours\nminutes: $minutes\nhoursWorked: $hoursWorked';
 }

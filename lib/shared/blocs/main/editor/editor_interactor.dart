@@ -9,8 +9,9 @@ class EditorBlocInteractor {
   WorkDayState get lastState =>
       _lastState; //FIXME: This is ugly... find better way
   void updateState(WorkDayState newState) {
+    // print('state gets updated from root-stream!');
+
     _lastState = newState;
-    // cachedState = newState;
     cachedState.add(newState);
   }
 
@@ -47,6 +48,7 @@ class EditorBlocInteractor {
           double hoursWorked = double.parse(action.workHours);
           state.hoursWorked = hoursWorked;
         }
+        // print('state in changes is ${state.build().toString()}');
       });
 
   void _statelify(WorkDayStateBuilder stateChange(WorkDayStateBuilder b)) {
@@ -58,7 +60,8 @@ class EditorBlocInteractor {
   void _cacheState(void stateChange(WorkDayStateBuilder b)) {
     final state = cachedState.value?.toBuilder();
     stateChange(state);
-    print('state is now: \n${state.hoursWorked}');
-    cachedState.add(state.build()); //Back to where you came from!
+    var newState = state.build();
+    // print('state is now: \n${newState.toString()}');
+    cachedState.add(newState); //Back to where you came from!
   }
 }

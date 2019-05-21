@@ -31,9 +31,13 @@ abstract class WorkPeriodState
         workDays: workDays.map((f) => f.toBusiness()).toList(),
       );
 
-  static from(WorkPeriod state) => WorkPeriodState(
-        state.periodBegin,
-        state.periodEnd,
-        BuiltList.from(state.workDays.map((f)=> WorkDayState.from(f))),
-      );
+  static from(WorkPeriod state) {
+    int index = 0;
+    return WorkPeriodState(
+      state.periodBegin,
+      state.periodEnd,
+      BuiltList<WorkDayState>.from(
+          state.workDays.map((f) => WorkDayState.from(f, index++))),
+    );
+  }
 }

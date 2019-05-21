@@ -15,11 +15,14 @@ class _$WorkDayState extends WorkDayState {
   final int minutes;
   @override
   final double hoursWorked;
+  @override
+  final int index;
 
   factory _$WorkDayState([void Function(WorkDayStateBuilder) updates]) =>
       (new WorkDayStateBuilder()..update(updates)).build();
 
-  _$WorkDayState._({this.date, this.hours, this.minutes, this.hoursWorked})
+  _$WorkDayState._(
+      {this.date, this.hours, this.minutes, this.hoursWorked, this.index})
       : super._() {
     if (date == null) {
       throw new BuiltValueNullFieldError('WorkDayState', 'date');
@@ -32,6 +35,9 @@ class _$WorkDayState extends WorkDayState {
     }
     if (hoursWorked == null) {
       throw new BuiltValueNullFieldError('WorkDayState', 'hoursWorked');
+    }
+    if (index == null) {
+      throw new BuiltValueNullFieldError('WorkDayState', 'index');
     }
   }
 
@@ -49,24 +55,16 @@ class _$WorkDayState extends WorkDayState {
         date == other.date &&
         hours == other.hours &&
         minutes == other.minutes &&
-        hoursWorked == other.hoursWorked;
+        hoursWorked == other.hoursWorked &&
+        index == other.index;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, date.hashCode), hours.hashCode), minutes.hashCode),
-        hoursWorked.hashCode));
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper('WorkDayState')
-          ..add('date', date)
-          ..add('hours', hours)
-          ..add('minutes', minutes)
-          ..add('hoursWorked', hoursWorked))
-        .toString();
+        $jc($jc($jc($jc(0, date.hashCode), hours.hashCode), minutes.hashCode),
+            hoursWorked.hashCode),
+        index.hashCode));
   }
 }
 
@@ -90,6 +88,10 @@ class WorkDayStateBuilder
   double get hoursWorked => _$this._hoursWorked;
   set hoursWorked(double hoursWorked) => _$this._hoursWorked = hoursWorked;
 
+  int _index;
+  int get index => _$this._index;
+  set index(int index) => _$this._index = index;
+
   WorkDayStateBuilder();
 
   WorkDayStateBuilder get _$this {
@@ -98,6 +100,7 @@ class WorkDayStateBuilder
       _hours = _$v.hours;
       _minutes = _$v.minutes;
       _hoursWorked = _$v.hoursWorked;
+      _index = _$v.index;
       _$v = null;
     }
     return this;
@@ -123,7 +126,8 @@ class WorkDayStateBuilder
             date: date,
             hours: hours,
             minutes: minutes,
-            hoursWorked: hoursWorked);
+            hoursWorked: hoursWorked,
+            index: index);
     replace(_$result);
     return _$result;
   }

@@ -20,6 +20,16 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
   MainBloc mainBloc = MainBloc(MainBlocInteractor());
+  EditorBloc _editorBloc;
+  EditorBloc get editorBloc {
+    if (null == mainBloc?.initialState()?.selectedIndex ||
+        null == _editorBloc?.initialState?.index ||
+        mainBloc.initialState().selectedIndex !=
+            _editorBloc.initialState.index) {
+      _createEditorBloc();
+    }
+    return _editorBloc;
+  }
 
   // int selectedIndex = 0;
   bool _dbLoaded = false;
@@ -34,7 +44,16 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
   void initState() {
     // print('selected index: $selectedIndex');
     // _loadDates(DateTime.now(), DateTime.now().add(Duration(days: 30)));
+    // mainBloc?.initialState()?.selectedIndex ?? 0
+    _createEditorBloc();
     super.initState();
+  }
+
+  void _createEditorBloc() {
+    _editorBloc = EditorBloc(
+      mainBloc.workDayState(mainBloc?.initialState()?.selectedIndex ?? 0),
+      mainBloc.updateEntry,
+    );
   }
 
   @override
@@ -58,9 +77,6 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
               return _buildUI(context, snapshot.data);
             },
           ),
-          // _dbLoaded
-          //     ? _createTable()
-          //     : CenteredLoadingSpinner(text: 'Loading stored times...'),
         ));
   }
 
@@ -156,16 +172,9 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
       height: _animatedHeight,
       child: SingleChildScrollView(
         child: TimesEditor(
-          // work: state.selectedDay,
           index: state.selectedIndex,
           clearButtonEnabled: state.selectedDay.isEnabled(),
-          // saveChanges: _saveChanges,
-          // clearEntry: _clearEntry,
-          // resetState: resetTimesEditor,
-          editorBloc: EditorBloc(
-            mainBloc.workDayState(state.selectedIndex),
-            mainBloc.updateEntry,
-          ),
+          editorBloc: editorBloc,
         ),
       ),
     );
@@ -174,10 +183,13 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
     return timesEditor;
   }
 
-  void _selectPeriod(DateTime begin, DateTime end) => setState(() {
-        _dbLoaded = false;
-        _loadDates(begin, end);
-      });
+  void _selectPeriod(DateTime begin, DateTime end) {
+    //TODO: make blocish
+    setState(() {
+      _dbLoaded = false;
+      _loadDates(begin, end);
+    });
+  }
 
   void _selectDay(int index, MainState state) {
     _showDrawer(index, state);
