@@ -121,9 +121,7 @@ class _TimesEditorState extends State<TimesEditor> {
                 ],
               );
             } else {
-              return CenteredLoadingSpinner(
-                text: 'DOOM!',
-              );
+              return CenteredLoadingSpinner(text: 'DOOM!');
             }
           }),
     );

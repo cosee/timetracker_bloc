@@ -17,7 +17,7 @@ class EditorBlocInteractor {
   Sink<WorkDayState> sink;
 
   void clearEntry(ClearEntryAction action) => _statelify((state) {
-        state = WorkDayState.empty().toBuilder();
+        // state = WorkDayState.empty().toBuilder();
         state.hoursWorked = 0;
         print(state);
       });
