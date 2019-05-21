@@ -18,6 +18,7 @@ abstract class MainState implements Built<MainState, MainStateBuilder> {
   }) =>
       _$MainState._(
         selectedIndex: selectedIndex ?? 0,
-        workPeriod: workPeriod ?? WorkPeriodState.from(WorkPeriod.dummyList()),
+        workPeriod: WorkPeriodState.from(workPeriod) ??
+            WorkPeriodState.from(WorkPeriod.dummyList()),
       );
 }

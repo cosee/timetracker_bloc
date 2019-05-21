@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:time_track/shared/blocs/main/blocs.dart';
 
 import 'package:time_track/view/pages/drawer/main_drawer.dart';
+import 'package:time_track/view/shared/widgets/centered_loading_spinner.dart';
 import 'package:time_track/view/shared/widgets/period_selector.dart';
 import 'package:time_track/view/shared/widgets/edit_row.dart';
 import 'package:time_track/view/shared/widgets/times_editor.dart';
-import 'package:time_track/db/entities/work_day_db.dart';
 import 'package:time_track/shared/blocs/main/blocs.dart';
 
 class EditPage extends StatefulWidget {
@@ -18,12 +18,6 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
   MainBloc mainBloc = MainBloc(MainBlocInteractor());
-
-  // int selectedIndex = 0;
-  bool _dbLoaded = false;
-  bool resetTimesEditor = false;
-  // WorkPeriod period = WorkPeriod.dummyList();
-  // WorkDay _getSelected() => period.workDays[selectedIndex];
 
   AnimationController _animationController;
   double _animatedHeight = 0;
@@ -45,25 +39,12 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
             stream: mainBloc.state,
             initialData: mainBloc.initialState(),
             builder: (context, AsyncSnapshot<MainState> snapshot) {
-              print('rebuilding stream ');
-              return _buildUI(context, snapshot.data);
+              return snapshot.hasData
+                  ? _buildUI(context, snapshot.data)
+                  : CenteredLoadingSpinner(text: 'Waiting!');
             },
           ),
         ));
-  }
-
-  void _loadDates(DateTime begin, DateTime end) {
-    WorkDayDb().getAll().then((workDays) {
-      setState(() {
-        if (workDays.isNotEmpty) {
-          // period = WorkPeriod(
-          //     periodBegin: begin, periodEnd: end, workDays: workDays);
-        } else {
-          // period = WorkPeriod(periodBegin: begin, periodEnd: end);
-        }
-        _dbLoaded = true;
-      });
-    });
   }
 
   _buildUI(BuildContext context, MainState state) => Column(
@@ -155,11 +136,12 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
   }
 
   void _selectPeriod(DateTime begin, DateTime end) {
-    //TODO: make blocish
-    setState(() {
-      _dbLoaded = false;
-      _loadDates(begin, end);
-    });
+    // mainBloc.selectPeriod.add();
+    // //TODO: make blocish
+    // setState(() {
+    //   _dbLoaded = false;
+    //   _loadDates(begin, end);
+    // });
   }
 
   void _selectDay(int index, MainState state) {
@@ -167,35 +149,6 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     mainBloc.selectDate.add(SelectDateAction(index));
   }
-
-  // void _clearEntry(int index) {
-  //   mainBloc.clearEntry.add(ClearEntryAction(index));
-
-  // setState(() {
-  //   period.workDays[idx].hoursWorked = 0;
-  //   resetTimesEditor = true;
-  //   WorkDayDb().insert(period.workDays[idx]).then((onValue) {
-  //     print('db reponse $onValue');
-  //   });
-  // });
-  // }
-
-  //Finds indext of date
-  // void _saveChanges(WorkDayState day) => setState(() {
-//TODO: implement in SubBloc?
-
-  // int index = period.workDays
-  //     .indexWhere((item) => isSameDate(item.date, day.date));
-
-  // period.workDays[index] = day.clone();
-
-  // WorkDayDb().insert(period.workDays[index]).then((onValue) {
-  //   print('db reponse $onValue');
-  // });
-
-  // _selectDay(index); //AFTER changing the values!
-  // print('saveChanges idx $index');
-  // });
 
 /**
  * Slide in on each click on a row. Slide out on second click on same row.
