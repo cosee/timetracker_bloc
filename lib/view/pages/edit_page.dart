@@ -11,9 +11,7 @@ import 'package:time_track/shared/blocs/main/blocs.dart';
 
 class EditPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return _EditPageState();
-  }
+  State<StatefulWidget> createState() => _EditPageState();
 }
 
 class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
@@ -24,6 +22,7 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    mainBloc.dispose(); //Closing our streams
     _animationController.dispose();
     super.dispose();
   }
@@ -89,8 +88,6 @@ class _EditPageState extends State<EditPage> with TickerProviderStateMixin {
 
   Widget _buildTimesList(BuildContext context, MainState state) {
     Widget timesList = Center(child: Text('No Times persisted yet'));
-
-    print('building list!');
     if (state.workPeriod.workDays.length > 0) {
       timesList = ListView(
         children: _buildProductItemList(context, state),

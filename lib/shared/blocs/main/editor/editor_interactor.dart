@@ -5,24 +5,22 @@ import 'package:time_track/shared/blocs/main/blocs.dart';
 class EditorBlocInteractor {
   EditorBlocInteractor(this.sink);
 
-  void updateState(WorkDayState newState) {
-    // print('state gets updated from root-stream!');
-
-    cachedState.add(newState);
-  }
-
+  //The Editor needs to cache its state.
+  //Only when the user hits the 'Save Changes' Button we want to update
+  // our main state and by that the repositories.
   final cachedState = BehaviorSubject<WorkDayState>.seeded(null);
 
   // Output for TravelBloc update
   Sink<WorkDayState> sink;
 
   void clearEntry(ClearEntryAction action) => _statelify((state) {
-        // state = WorkDayState.empty().toBuilder();
+        // The DB repository interpretes hoursWorked<0 as to delete the entry
         state.hoursWorked = 0;
         print(state);
       });
 
-  void saveChanges(SaveChangesAction action) => // cache to store
+  // write cache back to store
+  void saveChanges(SaveChangesAction action) =>
       _statelify((state) => state = cachedState.value.toBuilder());
 
   void cacheChanges(CacheChangeAction action) => _cacheState((state) {
@@ -44,17 +42,20 @@ class EditorBlocInteractor {
         // print('state in changes is ${state.build().toString()}');
       });
 
+  // Convenience method for making our state modifiable
   void _statelify(WorkDayStateBuilder stateChange(WorkDayStateBuilder b)) {
     final state = cachedState.value.toBuilder();
     stateChange(state);
-    sink.add(state.build()); //Back to where you came from!
+    //Back to where you came from!
+    sink.add(state.build()); //Update our real state, back in the MainBloc
   }
 
+  // Convenience method for making our state modifiable
   void _cacheState(void stateChange(WorkDayStateBuilder b)) {
     final state = cachedState.value?.toBuilder();
     stateChange(state);
     var newState = state.build();
-    // print('state is now: \n${newState.toString()}');
-    cachedState.add(newState); //Back to where you came from!
+    // print('state in changes is ${newState.toString()}');
+    cachedState.add(newState); //Updating our cached state
   }
 }

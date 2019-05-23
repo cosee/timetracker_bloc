@@ -5,8 +5,14 @@ import 'package:time_track/shared/blocs/main/blocs.dart';
 import 'package:time_track/view/bloc_provider.dart';
 
 class MainBloc implements BlocBase {
+  
+  
   // Inputs
+  //If possible we should wrap our "intentions" (for lack of a better word) in 
+  // precisely defined Actions. 
+  //These Actions then can be evaluated and the state modified accordingly.
   final Sink<SelectDateAction> selectDate;
+
   final Sink<WorkDayState> updateEntry;
 
   // Outputs
@@ -14,7 +20,7 @@ class MainBloc implements BlocBase {
   //This is fancy, isn't it?
   final Stream<WorkDayState> Function(int index) workDayState;
 
-  // ! Not BLoC conform convenient method !
+  // ! Not BLoC conform convenience method !
   final MainState Function() initialState;
 
   // Cleanup

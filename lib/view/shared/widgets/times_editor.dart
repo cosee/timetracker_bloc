@@ -35,23 +35,18 @@ class _TimesEditorState extends State<TimesEditor> {
   WorkDayState lastState;
 
   EditorBloc _createEditorBloc() {
+    // We have to close our old streams manually!
+    _editorBloc?.dispose();
     _editorBloc = EditorBloc(widget.stream, widget.sink);
     return _editorBloc;
   }
 
-  void _cacheDateTime(DateTime date) {
-    _editorBloc.cacheChanges.add(CacheChangeAction.cacheDate(date));
-  }
-
-  void _cacheDayTime(TimeOfDay time) {
-    var timeOfDay = DateTime(0, 0, 0, time.hour, time.minute);
-    _editorBloc.cacheChanges.add(CacheChangeAction.cacheTime(timeOfDay));
-  }
-
-  void _cacheWorkedHours(String hoursWorked) {
-    _editorBloc.cacheChanges.add(CacheChangeAction.cacheWorkHours(hoursWorked));
-  }
-
+  // We use this to decide if the state has to be updated.
+  // If we have a different index we create a new BLoC and update 
+  // the TextField.
+  //
+  // The old version of the app used some very wrong workarounds
+  // for this.
   @override
   didUpdateWidget(TimesEditor oldWidget) {
     print('didUpdateWidget');
@@ -62,20 +57,10 @@ class _TimesEditorState extends State<TimesEditor> {
     super.didUpdateWidget(oldWidget);
   }
 
-  _resetTextController({double value}) {
-    print('Reset textController');
-    // print('initial: ${_editorBloc.initialState}');
-    // print('value: ${value}');
-    String text = value?.toString();
-    if (null == text) {
-      text = (_editorBloc.initialState?.isEnabled() ?? false)
-          ? _editorBloc.initialState.hoursWorked.toString()
-          : null;
-    }
-    //Fix this better maybe?
-    if (null == controller || text != controller?.text) {
-      controller = TextEditingController(text: text);
-    }
+  @override
+  void dispose() {
+    _editorBloc?.dispose(); //Closing our streams
+    super.dispose();
   }
 
   @override
@@ -125,6 +110,22 @@ class _TimesEditorState extends State<TimesEditor> {
             }
           }),
     );
+  }
+
+  _resetTextController({double value}) {
+    print('Reset textController');
+    // print('initial: ${_editorBloc.initialState}');
+    // print('value: ${value}');
+    String text = value?.toString();
+    if (null == text) {
+      text = (_editorBloc.initialState?.isEnabled() ?? false)
+          ? _editorBloc.initialState.hoursWorked.toString()
+          : null;
+    }
+    //Fix this better maybe?
+    if (null == controller || text != controller?.text) {
+      controller = TextEditingController(text: text);
+    }
   }
 
   Widget _createWorkdayColumn(BuildContext context) =>
@@ -194,4 +195,17 @@ class _TimesEditorState extends State<TimesEditor> {
             ? () => _editorBloc.clearEntry.add(ClearEntryAction(widget.index))
             : null,
       );
+
+  void _cacheDateTime(DateTime date) {
+    _editorBloc.cacheChanges.add(CacheChangeAction.cacheDate(date));
+  }
+
+  void _cacheDayTime(TimeOfDay time) {
+    var timeOfDay = DateTime(0, 0, 0, time.hour, time.minute);
+    _editorBloc.cacheChanges.add(CacheChangeAction.cacheTime(timeOfDay));
+  }
+
+  void _cacheWorkedHours(String hoursWorked) {
+    _editorBloc.cacheChanges.add(CacheChangeAction.cacheWorkHours(hoursWorked));
+  }
 }

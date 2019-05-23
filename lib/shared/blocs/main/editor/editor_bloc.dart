@@ -9,9 +9,8 @@ class EditorBloc implements BlocBase {
   final Sink<ClearEntryAction> clearEntry;
   final Sink<SaveChangesAction> saveChanges;
   final Sink<CacheChangeAction> cacheChanges;
-  // cacheChanges
-  // Outputs
 
+  // Outputs
   final BehaviorSubject<WorkDayState> _state;
   Stream<WorkDayState> get state => _state.distinct();
   WorkDayState get initialState => _state.value;
@@ -26,7 +25,7 @@ class EditorBloc implements BlocBase {
     _subscriptions.forEach((f) => f.cancel());
   }
 
-  // Route in and outputs to (mostly) interactors methods/ streams
+  // Route in- and out-puts to (mostly) interactors methods/ streams
   factory EditorBloc(
     Stream<WorkDayState> stream,
     Sink<WorkDayState> sink,
@@ -41,7 +40,7 @@ class EditorBloc implements BlocBase {
         StreamController<CacheChangeAction>(sync: true);
 
     final subscriptions = <StreamSubscription<dynamic>>[
-      stream.listen(interactor.updateState),
+      stream.listen(interactor.cachedState.add),
       clearDateController.stream.listen(interactor.clearEntry),
       saveChangesController.stream.listen(interactor.saveChanges),
       cacheChangesController.stream.listen(interactor.cacheChanges)
